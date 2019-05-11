@@ -44,5 +44,14 @@ namespace MemeGame
         {
             return new Point(Area.X, Area.Y);
         }
+
+        public int distance(Point point)
+        {
+            return distance(point.X,point.Y);
+        }
+        public int distance(int x, int y)
+        {
+            return Math.Abs(x - Area.X) + Math.Abs(y - Area.Y);
+        }
     }
 }

@@ -50,6 +50,8 @@ namespace MemeGame
 
         public void Update(int gravity, WallCollection walls)
         {
+            AccelY = gravity;
+
             // Save Velocity and Rec values to be manipulated
             Rectangle rectangle = Rec;
             Point velocity = Velocity;
@@ -86,33 +88,68 @@ namespace MemeGame
                     }
                 }
             }
-            
+
             // test to see if on the ground
             OnGround = false;
-            AccelY = gravity;
+            if (walls.Intersects(new Rectangle(Rec.X, Rec.Bottom, Rec.Width, 1)) != new Rectangle())
+            {
+                OnGround = true;
+            }
+
+            // test to see if on the ground
             // Test X
             Rectangle test;
             Rectangle wall = new Rectangle();
+            Point offset = new Point(0);
             if (velocity.X > 0) // hit from right side ->|
             {
-                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height);
+                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height/2 + 1);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
                     velocity.X = -rectangle.Right + wall.Left;
                     AccelX = 0;
                 }
+                else
+                {
+                    // test for moveing over an incline
+                    test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height);
+                    wall = walls.Intersects(test);
+                    if (wall != new Rectangle())
+                    {
+                        test = new Rectangle(rectangle.X, rectangle.Y - wall.Height, rectangle.Width + velocity.X, rectangle.Height);
+                        test = walls.Intersects(test);
+                        if (test == new Rectangle())
+                        {
+                            offset.Y -= wall.Height;
+                        }
+                    }
+                }
             }
             else if (velocity.X < 0) // hit from right side |<-
             {
-                test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height);
+                test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height/2 + 1);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
                     velocity.X = wall.Right - rectangle.Left;
                     AccelX = 0;
                 }
-                
+                else
+                {
+                    // test for moveing over an incline
+                    test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height);
+                    wall = walls.Intersects(test);
+                    if (wall != new Rectangle())
+                    {
+                        test = new Rectangle(rectangle.X + velocity.X, rectangle.Y - wall.Height, rectangle.Width - velocity.X, rectangle.Height);
+                        test = walls.Intersects(test);
+                        if (test == new Rectangle())
+                        {
+                            offset.Y -= wall.Height;
+                        }
+                    }
+                }
             }
 
             // Test Y
@@ -123,24 +160,21 @@ namespace MemeGame
                 if (wall != new Rectangle())
                 {
                     velocity.Y = wall.Top - rectangle.Bottom;
-                    AccelY = 0;
-                    OnGround = true;
                 }
             }
             else if (velocity.Y < 0) // hit from top ^
             {
-                test = new Rectangle(rectangle.X, rectangle.Y + velocity.Y, rectangle.Width, rectangle.Height - velocity.Y);
+                test = new Rectangle(rectangle.X, rectangle.Y + velocity.Y, rectangle.Width, rectangle.Height - velocity.Y );
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
                     velocity.Y = -rectangle.Top + wall.Bottom;
-                    AccelY = 0;
                 }
             }
             
             // uppdate the rectangle based on velocity
-            rectangle.X += velocity.X;
-            rectangle.Y += velocity.Y;
+            rectangle.X += velocity.X + offset.X;
+            rectangle.Y += velocity.Y + offset.Y;
             
             // reset Velocity and Rec values
             Velocity = velocity;

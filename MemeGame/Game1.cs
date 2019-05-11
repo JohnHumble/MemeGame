@@ -4,6 +4,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MemeGame
 {
+    enum Screen
+    {
+        Play,
+        Build
+    }
+    
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
@@ -11,6 +17,9 @@ namespace MemeGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Screen screen;
+
+        Builder builder;
 
         WallCollection walls;
         Hero player1;
@@ -37,7 +46,10 @@ namespace MemeGame
 
             graphics.PreferredBackBufferHeight = screenHeight;
             graphics.PreferredBackBufferWidth = screenWidth;
+            IsMouseVisible = true;
             graphics.ApplyChanges();
+
+            screen = Screen.Build;
 
             // TODO: Add your initialization logic here
 
@@ -57,8 +69,10 @@ namespace MemeGame
             player1 = new Hero(new Point(300, 100), 32, 32, 20, heroTex, 0, 0);
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
-            walls = new WallCollection(wallTexture, 4);
-            walls.createBlock(0, 200, 1000, 100);
+            walls = new WallCollection(wallTexture, 8);
+            //walls.createBlock(0, 200, screenWidth, screenHeight);
+
+            builder = new Builder(walls);
             
             // TODO: use this.Content to load your game content here
         }
@@ -89,25 +103,37 @@ namespace MemeGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // user control
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            if (screen == Screen.Play)
             {
-                player1.jump(20);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                player1.moveLeft(10);
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                player1.moveRight(10);
-            }
-            if (Keyboard.GetState().IsKeyUp(Keys.Left) && Keyboard.GetState().IsKeyUp(Keys.Right))
-            {
-                player1.stop();
-            }
+                // user control
+                if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                {
+                    player1.jump(20);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                {
+                    player1.moveLeft(10);
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                {
+                    player1.moveRight(10);
+                }
+                if (Keyboard.GetState().IsKeyUp(Keys.Left) && Keyboard.GetState().IsKeyUp(Keys.Right))
+                {
+                    player1.stop();
+                }
 
-            player1.Update(2, walls);
+                player1.Update(2, walls);
+            }
+            else if (screen == Screen.Build)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                {
+                    screen = Screen.Play;
+                }
+
+                builder.building(Mouse.GetState());
+            }
             // TODO: Add your update logic here
 
             base.Update(gameTime);

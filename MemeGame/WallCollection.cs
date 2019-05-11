@@ -50,21 +50,31 @@ namespace MemeGame
                 for (int j = 0; j < rows; j++)
                 {
                     Wall next = new Wall(x + i * wallSize, y + j * wallSize, wallSize, wallSize,texture);
-                    Add(next);
+                    if (Intersects(next.Area) == new Rectangle())
+                    {
+                        Add(next);
+                    }
                 }
             }
         }
 
         public Rectangle Intersects(Rectangle other)
         {
+            Rectangle rec = new Rectangle();
+            int distance = int.MaxValue;
             foreach (var wall in this)
             {
                 if (wall.Area.Intersects(other))
                 {
-                    return wall.Area;
+                    int test = Math.Abs(wall.Area.Y - other.Y);
+                    if (test < distance)
+                    {
+                        rec = wall.Area;
+                        distance = test;
+                    }
                 }
             }
-            return new Rectangle();
+            return rec;
         }
 
         public void Draw(SpriteBatch spriteBatch)
