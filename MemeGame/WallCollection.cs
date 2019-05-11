@@ -13,6 +13,11 @@ namespace MemeGame
         Texture2D texture;
         int wallSize;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="texture"> terrain textur file.</param>
+        /// <param name="size">The size of the wall items. size * 2 should not be >= to the hero size / 2 </param>
         public WallCollection(Texture2D texture,int size)
         {
             this.texture = texture;
