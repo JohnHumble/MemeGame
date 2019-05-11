@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace MemeGame
 {
+    [Serializable]
+
     class Wall
     {
         public Rectangle Area { get; set; }

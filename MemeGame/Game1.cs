@@ -75,6 +75,8 @@ namespace MemeGame
             //walls.createBlock(0, 200, screenWidth, screenHeight);
 
             builder = new Builder(walls);
+
+            builder.saveMap("tmp.mmp");
             
             // TODO: use this.Content to load your game content here
         }
@@ -135,6 +137,7 @@ namespace MemeGame
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
+                    builder.saveMap("tmp.mmp");
                     screen = Screen.Play;
                 }
 
