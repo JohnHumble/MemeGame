@@ -21,7 +21,7 @@ namespace MemeGame
         public Builder(WallCollection walls)
         {
             this.walls = walls;
-            radius = 32;
+            radius = 64;
         }
 
         public void saveMap(string fileName)

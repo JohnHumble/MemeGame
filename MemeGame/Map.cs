@@ -10,14 +10,14 @@ namespace MemeGame
 
     class Map
     {
-        public List<Wall> walls;
+        public List<WallData> walls;
 
-        public Map(WallCollection walls)
+        public Map(WallCollection collection)
         {
-            this.walls = new List<Wall>();
-            foreach (var wall in walls)
+            walls = new List<WallData>();
+            foreach (var wall in collection)
             {
-                this.walls.Add(wall);
+                this.walls.Add(wall.GetWallData());
             }
         }
     }

@@ -11,7 +11,8 @@ namespace MemeGame
     class Hero
     {
         // Constant values
-        const int IMAGE_SIZE = 118; //size of each image in the image sheet.
+        const int IMAGE_WIDTH = 80; //size of each image in the image sheet.
+        const int IMAGE_HEIGHT = 120;
         const int MAX_SPEED = 8; // the maximum velocity on the ground.
         const int DAMPEN = 2; // amount to slow down on ground.
 
@@ -24,6 +25,7 @@ namespace MemeGame
 
         private Texture2D texture;
         private Rectangle source;
+        int animationFrame = 0;
 
         // number of hitpoints
         public int Health { get; private set; }
@@ -40,7 +42,7 @@ namespace MemeGame
         public Hero(Point location, int width, int height, int health, Texture2D texture, int acceleration_x, int acceleration_y)
         {
             Rec = new Rectangle(location, new Point(width, height));
-            source = new Rectangle(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+            source = new Rectangle(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
             this.texture = texture;
             Health = health;
             AccelX = acceleration_x;
@@ -222,7 +224,33 @@ namespace MemeGame
         /// <param name="spriteBatch">an already begun spritebatch</param>
         public void Draw(SpriteBatch spriteBatch)
         {
+            int frameSpeed = 5;
+
+
+            if (animationFrame == frameSpeed)
+            {
+                source.Y = source.Y + IMAGE_HEIGHT;
+                animationFrame = 0;
+            }
+            if (source.Y / IMAGE_HEIGHT >= 9)
+                source.Y = IMAGE_HEIGHT;
+
+            if (Velocity.X > 0)
+            {
+                source.X = IMAGE_WIDTH;
+            }
+            else if (Velocity.X < 0)
+            {
+                source.X = 0;
+            }
+            else
+            {
+                animationFrame = 0;
+                source.Y = 0;
+            }
             spriteBatch.Draw(texture, Rec, source, Color.White);
+
+            animationFrame++;
         }
     }
 }

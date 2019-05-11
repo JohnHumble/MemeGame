@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace MemeGame
 {
-    [Serializable]
-
     class Wall
     {
         public Rectangle Area { get; set; }
@@ -33,6 +31,14 @@ namespace MemeGame
             Health = health;
         }
 
+        public Wall(WallData wall, Texture2D texture, int health = 10)
+        {
+            this.texture = texture;
+            Health = health;
+
+            Area = new Rectangle(wall.x, wall.y, wall.width, wall.height);
+        }
+
         /// <summary>
         /// Method that draws the wall object. 
         /// </summary>
@@ -54,6 +60,11 @@ namespace MemeGame
         public int distance(int x, int y)
         {
             return Math.Abs(x - Area.X) + Math.Abs(y - Area.Y);
+        }
+
+        public WallData GetWallData()
+        {
+            return new WallData(Area.X, Area.Y, Area.Width, Area.Height);
         }
     }
 }
