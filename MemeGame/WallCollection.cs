@@ -37,6 +37,24 @@ namespace MemeGame
             }
         }
 
+        public void createBlock(int x, int y, int width, int height)
+        {
+            int cols = width / wallSize;
+            int rows = height / wallSize;
+
+            x -= x % wallSize;
+            y -= y % wallSize;
+
+            for (int i = 0; i < cols; i++)
+            {
+                for (int j = 0; j < rows; j++)
+                {
+                    Wall next = new Wall(x + i * wallSize, y + j * wallSize, wallSize, wallSize,texture);
+                    Add(next);
+                }
+            }
+        }
+
         public Rectangle Intersects(Rectangle other)
         {
             foreach (var wall in this)

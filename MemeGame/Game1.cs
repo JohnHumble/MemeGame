@@ -13,8 +13,9 @@ namespace MemeGame
         SpriteBatch spriteBatch;
 
         WallCollection walls;
-
         Hero player1;
+
+        int screenWidth, screenHeight;
         
         public Game1()
         {
@@ -30,6 +31,14 @@ namespace MemeGame
         /// </summary>
         protected override void Initialize()
         {
+            // Set screen size
+            screenWidth = 1652;
+            screenHeight = 944;
+
+            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.ApplyChanges();
+
             // TODO: Add your initialization logic here
 
             base.Initialize();
@@ -48,10 +57,8 @@ namespace MemeGame
             player1 = new Hero(new Point(300, 100), 32, 32, 20, heroTex, 0, 0);
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
-            walls = new WallCollection(wallTexture, 16);
-            walls.createFloor(100, 400, 50);
-            walls.createFloor(300, 300, 10);
-            walls.createWall(400, 200, 30);
+            walls = new WallCollection(wallTexture, 4);
+            walls.createBlock(0, 200, 1000, 100);
             
             // TODO: use this.Content to load your game content here
         }
@@ -85,15 +92,19 @@ namespace MemeGame
             // user control
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                player1.jump(10);
+                player1.jump(20);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
             {
-                player1.moveLeft(4);
+                player1.moveLeft(10);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
-                player1.moveRight(4);
+                player1.moveRight(10);
+            }
+            if (Keyboard.GetState().IsKeyUp(Keys.Left) && Keyboard.GetState().IsKeyUp(Keys.Right))
+            {
+                player1.stop();
             }
 
             player1.Update(2, walls);
@@ -111,8 +122,8 @@ namespace MemeGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            player1.Draw(spriteBatch);
             walls.Draw(spriteBatch);
+            player1.Draw(spriteBatch);
             spriteBatch.End();
             // TODO: Add your drawing code here
 

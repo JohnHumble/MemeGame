@@ -12,7 +12,8 @@ namespace MemeGame
     {
         // Constant values
         const int IMAGE_SIZE = 118; //size of each image in the image sheet.
-        const int MAX_SPEED = 4; // the maximum velocity on the ground.
+        const int MAX_SPEED = 8; // the maximum velocity on the ground.
+        const int DAMPEN = 2;
 
         // location and physics based
         public Rectangle Rec { get; private set; }
@@ -65,50 +66,75 @@ namespace MemeGame
             {
                 velocity.X = -MAX_SPEED;
             }
+
+            if (OnGround)
+            {
+                velocity.Y = 0;
+                if (AccelX == 0)
+                {
+                    if (velocity.X > DAMPEN)
+                    {
+                        velocity.X -= DAMPEN;
+                    }
+                    else if (velocity.X < -DAMPEN)
+                    {
+                        velocity.X += DAMPEN;
+                    }
+                    else
+                    {
+                        velocity.X = 0;
+                    }
+                }
+            }
             
-            AccelY = gravity;
-
             // test to see if on the ground
-
+            OnGround = false;
+            AccelY = gravity;
             // Test X
             Rectangle test;
             Rectangle wall = new Rectangle();
-            if (velocity.X > 0){
+            if (velocity.X > 0) // hit from right side ->|
+            {
                 test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
-                    velocity.X = rectangle.Right - wall.Left;
+                    velocity.X = -rectangle.Right + wall.Left;
+                    AccelX = 0;
                 }
             }
-            else if (velocity.X < 0)
+            else if (velocity.X < 0) // hit from right side |<-
             {
                 test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
                     velocity.X = wall.Right - rectangle.Left;
+                    AccelX = 0;
                 }
+                
             }
 
             // Test Y
-            if (velocity.Y > 0)
+            if (velocity.Y > 0) // fall on v
             {
                 test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height + velocity.Y);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
                     velocity.Y = wall.Top - rectangle.Bottom;
+                    AccelY = 0;
                     OnGround = true;
                 }
             }
-            else if (velocity.Y < 0)
+            else if (velocity.Y < 0) // hit from top ^
             {
                 test = new Rectangle(rectangle.X, rectangle.Y + velocity.Y, rectangle.Width, rectangle.Height - velocity.Y);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
-                    velocity.Y = rectangle.Top - wall.Bottom;
+                    velocity.Y = -rectangle.Top + wall.Bottom;
+                    AccelY = 0;
                 }
             }
             
@@ -127,8 +153,11 @@ namespace MemeGame
         /// <param name="force">value of velocity to initially start moving up.</param>
         public void jump(int force)
         {
-            if(OnGround)
+            if (OnGround)
+            {
                 Velocity = new Point(Velocity.X, -force);
+                OnGround = false;
+            }
         }
 
         /// <summary>
@@ -138,6 +167,10 @@ namespace MemeGame
         public void moveRight(int force)
         {
             AccelX = force;
+        }
+        public void stop()
+        {
+            AccelX = 0;
         }
 
         /// <summary>
