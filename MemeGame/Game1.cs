@@ -76,7 +76,7 @@ namespace MemeGame
 
             builder = new Builder(walls);
 
-            builder.loadMap("tmp.mmp");
+            builder.loadMap("last");
             
             // TODO: use this.Content to load your game content here
         }
@@ -137,7 +137,7 @@ namespace MemeGame
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
-                    builder.saveMap("tmp.mmp");
+                    builder.saveMap("last");
                     screen = Screen.Play;
                 }
 

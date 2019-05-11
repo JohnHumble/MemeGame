@@ -27,6 +27,12 @@ namespace MemeGame
         public WallCollection(Texture2D texture, Map map)
         {
             this.texture = texture;
+            loadFromMap(map);
+        }
+
+        public void loadFromMap(Map map)
+        {
+            Clear();
             foreach (var data in map.walls)
             {
                 Wall next = new Wall(data, texture);
