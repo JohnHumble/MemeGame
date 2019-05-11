@@ -12,7 +12,7 @@ namespace MemeGame
     {
         // Constant values
         const int IMAGE_SIZE = 118; //size of each image in the image sheet.
-        const int MAX_SPEED = 32; // the maximum velocity on the ground.
+        const int MAX_SPEED = 4; // the maximum velocity on the ground.
 
         // location and physics based
         public Rectangle Rec { get; private set; }
@@ -53,32 +53,69 @@ namespace MemeGame
             Rectangle rectangle = Rec;
             Point velocity = Velocity;
 
-            // test to see if on the ground
-            int offset = walls.TestGround(rectangle, rectangle.Y);
-            if (offset >= 0)
-            {
-                OnGround = true;
-                rectangle.Y += offset - rectangle.Height; // do something about the magic number
-            }
-
-            // make no downard Y direction if on ground
-            if (OnGround && AccelY >= 0)
-            {
-                AccelY = 0;
-                velocity.Y = 0;
-            }
-            else
-            {
-                AccelY = gravity;
-            }
-
             // update velocity based on acceeleration
             velocity.X += AccelX;
             velocity.Y += AccelY;
+
+            if (velocity.X > MAX_SPEED)
+            {
+                velocity.X = MAX_SPEED;
+            }
+            else if (velocity.X < -MAX_SPEED)
+            {
+                velocity.X = -MAX_SPEED;
+            }
+            
+            AccelY = gravity;
+
+            // test to see if on the ground
+
+            // Test X
+            Rectangle test;
+            Rectangle wall = new Rectangle();
+            if (velocity.X > 0){
+                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height);
+                wall = walls.Intersects(test);
+                if (wall != new Rectangle())
+                {
+                    velocity.X = rectangle.Right - wall.Left;
+                }
+            }
+            else if (velocity.X < 0)
+            {
+                test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height);
+                wall = walls.Intersects(test);
+                if (wall != new Rectangle())
+                {
+                    velocity.X = wall.Right - rectangle.Left;
+                }
+            }
+
+            // Test Y
+            if (velocity.Y > 0)
+            {
+                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height + velocity.Y);
+                wall = walls.Intersects(test);
+                if (wall != new Rectangle())
+                {
+                    velocity.Y = wall.Top - rectangle.Bottom;
+                    OnGround = true;
+                }
+            }
+            else if (velocity.Y < 0)
+            {
+                test = new Rectangle(rectangle.X, rectangle.Y + velocity.Y, rectangle.Width, rectangle.Height - velocity.Y);
+                wall = walls.Intersects(test);
+                if (wall != new Rectangle())
+                {
+                    velocity.Y = rectangle.Top - wall.Bottom;
+                }
+            }
+            
             // uppdate the rectangle based on velocity
             rectangle.X += velocity.X;
             rectangle.Y += velocity.Y;
-
+            
             // reset Velocity and Rec values
             Velocity = velocity;
             Rec = rectangle;

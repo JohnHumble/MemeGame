@@ -50,8 +50,9 @@ namespace MemeGame
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
             walls = new WallCollection(wallTexture, 16);
             walls.createFloor(100, 400, 50);
+            walls.createFloor(300, 300, 10);
+            walls.createWall(400, 200, 30);
             
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -81,6 +82,19 @@ namespace MemeGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            // user control
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                player1.jump(10);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                player1.moveLeft(4);
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                player1.moveRight(4);
+            }
 
             player1.Update(2, walls);
             // TODO: Add your update logic here

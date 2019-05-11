@@ -28,22 +28,25 @@ namespace MemeGame
             }
         }
 
-        /// <summary>
-        /// returns a 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
-        public int TestGround(Rectangle other, int height)
+        public void createWall(int x, int y, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                Wall next = new Wall(x, y + (i * wallSize), wallSize, wallSize, texture);
+                Add(next);
+            }
+        }
+
+        public Rectangle Intersects(Rectangle other)
         {
             foreach (var wall in this)
             {
                 if (wall.Area.Intersects(other))
                 {
-                    return wall.Area.Y - height;
+                    return wall.Area;
                 }
             }
-            return -1;
+            return new Rectangle();
         }
 
         public void Draw(SpriteBatch spriteBatch)

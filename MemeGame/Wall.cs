@@ -40,6 +40,9 @@ namespace MemeGame
             spriteBatch.Draw(texture, Area, Color.White);
         }
 
-
+        public Point GetPoint()
+        {
+            return new Point(Area.X, Area.Y);
+        }
     }
 }
