@@ -66,7 +66,11 @@ namespace MemeGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+<<<<<<< HEAD
+            
+=======
 
+>>>>>>> 09b6a858551a028f56c90e2332598da05a9be6da
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
             player1 = new Hero(new Point(300, 100), UNIT_SIZE, UNIT_SIZE, 20, heroTex, 0, 0);
 
