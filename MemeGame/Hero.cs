@@ -105,7 +105,7 @@ namespace MemeGame
             Point offset = new Point(0);
             if (velocity.X > 0) // hit from right side ->|
             {
-                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height/2 + 1);
+                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height/2);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
@@ -130,7 +130,7 @@ namespace MemeGame
             }
             else if (velocity.X < 0) // hit from right side |<-
             {
-                test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height/2 + 1);
+                test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height/2);
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
@@ -170,7 +170,7 @@ namespace MemeGame
                 wall = walls.Intersects(test);
                 if (wall != new Rectangle())
                 {
-                    velocity.Y = -rectangle.Top + wall.Bottom;
+                    velocity.Y = 0;
                 }
             }
             

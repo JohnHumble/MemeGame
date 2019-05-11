@@ -15,6 +15,8 @@ namespace MemeGame
     /// </summary>
     public class Game1 : Game
     {
+        const int UNIT_SIZE = 32;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Screen screen;
@@ -65,11 +67,16 @@ namespace MemeGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+<<<<<<< HEAD
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
             player1 = new Hero(new Point(300, 100), 32, 32, 20, heroTex, 0, 0);
+=======
+            Texture2D heroTex = loadColorTexture(Color.Red);
+            player1 = new Hero(new Point(300, 100), UNIT_SIZE, UNIT_SIZE, 20, heroTex, 0, 0);
+>>>>>>> 2ae4dbd45e00dd5a7274f925e30d77b0d9832e53
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
-            walls = new WallCollection(wallTexture, 8);
+            walls = new WallCollection(wallTexture, UNIT_SIZE/2);
             //walls.createBlock(0, 200, screenWidth, screenHeight);
 
             builder = new Builder(walls);
@@ -83,7 +90,7 @@ namespace MemeGame
             texture.SetData<Color>(new Color[] { color });
             return texture;
         }
-
+        
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -121,6 +128,10 @@ namespace MemeGame
                 if (Keyboard.GetState().IsKeyUp(Keys.Left) && Keyboard.GetState().IsKeyUp(Keys.Right))
                 {
                     player1.stop();
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.RightShift))
+                {
+                    screen = Screen.Build;
                 }
 
                 player1.Update(2, walls);
