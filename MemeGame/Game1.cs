@@ -66,14 +66,9 @@ namespace MemeGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-<<<<<<< HEAD
+            
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
-            player1 = new Hero(new Point(300, 100), 32, 32, 20, heroTex, 0, 0);
-=======
-            Texture2D heroTex = loadColorTexture(Color.Red);
             player1 = new Hero(new Point(300, 100), UNIT_SIZE, UNIT_SIZE, 20, heroTex, 0, 0);
->>>>>>> 2ae4dbd45e00dd5a7274f925e30d77b0d9832e53
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
             walls = new WallCollection(wallTexture, UNIT_SIZE/2);
