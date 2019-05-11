@@ -1,9 +1,14 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MemeGame
 {
@@ -16,7 +21,33 @@ namespace MemeGame
         public Builder(WallCollection walls)
         {
             this.walls = walls;
-            radius = 32;
+            radius = 64;
+        }
+
+        public void saveMap(string fileName)
+        {
+            Map saveMap = new Map(walls);
+            string appPath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            appPath +="\\"+ fileName;
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(appPath, FileMode.Create, FileAccess.Write);
+
+            formatter.Serialize(stream, saveMap);
+            stream.Close();
+        }
+
+        public Map loadMap(string fileName)
+        {
+            IFormatter formatter = new BinaryFormatter();
+
+            string appPath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            appPath +="\\"+ fileName;
+
+            Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            Map load = (Map)formatter.Deserialize(stream);
+
+            stream.Close();
+            return load;
         }
 
         public void building(MouseState mouse)

@@ -14,7 +14,7 @@ namespace MemeGame
         const int IMAGE_WIDTH = 80; //size of each image in the image sheet.
         const int IMAGE_HEIGHT = 120;
         const int MAX_SPEED = 8; // the maximum velocity on the ground.
-        const int DAMPEN = 2;
+        const int DAMPEN = 2; // amount to slow down on ground.
 
         // location and physics based
         public Rectangle Rec { get; private set; }
@@ -23,8 +23,8 @@ namespace MemeGame
         public int AccelY { get; set; }
         public bool OnGround { get; private set; }
 
-        Texture2D texture;
-        Rectangle source;
+        private Texture2D texture;
+        private Rectangle source;
         int animationFrame = 0;
 
         // number of hitpoints

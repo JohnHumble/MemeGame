@@ -15,7 +15,7 @@ namespace MemeGame
     /// </summary>
     public class Game1 : Game
     {
-        const int UNIT_SIZE = 32;
+        const int UNIT_SIZE = 64;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -66,7 +66,11 @@ namespace MemeGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 09b6a858551a028f56c90e2332598da05a9be6da
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
             player1 = new Hero(new Point(300, 100), UNIT_SIZE, UNIT_SIZE, 20, heroTex, 0, 0);
 
@@ -75,6 +79,8 @@ namespace MemeGame
             //walls.createBlock(0, 200, screenWidth, screenHeight);
 
             builder = new Builder(walls);
+
+            builder.loadMap("tmp.mmp");
             
             // TODO: use this.Content to load your game content here
         }
@@ -135,6 +141,7 @@ namespace MemeGame
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
+                    builder.saveMap("tmp.mmp");
                     screen = Screen.Play;
                 }
 

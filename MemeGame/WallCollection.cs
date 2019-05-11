@@ -24,6 +24,16 @@ namespace MemeGame
             wallSize = size;
         }
 
+        public WallCollection(Texture2D texture, Map map)
+        {
+            this.texture = texture;
+            foreach (var data in map.walls)
+            {
+                Wall next = new Wall(data, texture);
+                Add(next);
+            }
+        }
+
         public void createFloor(int x, int y, int count)
         {
             for(int i = 0; i < count; i++)
