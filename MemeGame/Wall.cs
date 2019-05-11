@@ -14,7 +14,6 @@ namespace MemeGame
         public int Health { get; set; }
 
         private Texture2D texture;
-        private Rectangle source;
 
         /// <summary>
         /// Constructor to create a wall objectect

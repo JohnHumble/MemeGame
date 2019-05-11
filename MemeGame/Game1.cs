@@ -11,6 +11,10 @@ namespace MemeGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        WallCollection walls;
+
+        Hero player1;
         
         public Game1()
         {
@@ -40,7 +44,22 @@ namespace MemeGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Texture2D heroTex = loadColorTexture(Color.Red);
+            player1 = new Hero(new Point(300, 100), 32, 32, 20, heroTex, 0, 0);
+
+            Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
+            walls = new WallCollection(wallTexture, 16);
+            walls.createFloor(100, 400, 50);
+            
+
             // TODO: use this.Content to load your game content here
+        }
+
+        private Texture2D loadColorTexture(Color color)
+        {
+            Texture2D texture = new Texture2D(graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            texture.SetData<Color>(new Color[] { color });
+            return texture;
         }
 
         /// <summary>
@@ -62,6 +81,8 @@ namespace MemeGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+
+            player1.Update(2, walls);
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -75,6 +96,10 @@ namespace MemeGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            spriteBatch.Begin();
+            player1.Draw(spriteBatch);
+            walls.Draw(spriteBatch);
+            spriteBatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);

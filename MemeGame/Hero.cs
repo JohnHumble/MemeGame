@@ -47,16 +47,25 @@ namespace MemeGame
             OnGround = false;
         }
 
-        public void Update(int gravity)
+        public void Update(int gravity, WallCollection walls)
         {
             // Save Velocity and Rec values to be manipulated
             Rectangle rectangle = Rec;
             Point velocity = Velocity;
 
+            // test to see if on the ground
+            int offset = walls.TestGround(rectangle, rectangle.Y);
+            if (offset >= 0)
+            {
+                OnGround = true;
+                rectangle.Y += offset - rectangle.Height; // do something about the magic number
+            }
+
             // make no downard Y direction if on ground
-            if (OnGround && AccelY > 0)
+            if (OnGround && AccelY >= 0)
             {
                 AccelY = 0;
+                velocity.Y = 0;
             }
             else
             {
@@ -109,7 +118,7 @@ namespace MemeGame
         /// <param name="spriteBatch">an already begun spritebatch</param>
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Rec, Color.White);
+            spriteBatch.Draw(texture, Rec, source, Color.White);
         }
     }
 }
