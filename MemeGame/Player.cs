@@ -14,12 +14,17 @@ namespace MemeGame
         Hero hero;
         Keys left, right, jump;
 
-        public Player(Point StartLocation, int width, int height, Texture2D texture, Keys left, Keys right, Keys jump)
+        string name;
+        Color color;
+
+        public Player(Point StartLocation, int width, int height, Texture2D texture, Keys left, Keys right, Keys jump, string name, Color color)
         {
             hero = new Hero(StartLocation, width, height, 60, texture);
             this.left = left;
             this.right = right;
             this.jump = jump;
+            this.name = name;
+            this.color = color;
         }
 
         private void testInput(int jump_force, int speed)
@@ -52,6 +57,11 @@ namespace MemeGame
         public void Draw(SpriteBatch spriteBatch)
         {
             hero.Draw(spriteBatch);
+        }
+
+        public void DrawName(SpriteBatch spriteBatch, SpriteFont font)
+        {
+            spriteBatch.DrawString(font, name, new Vector2(hero.Rec.X, hero.Rec.Y - 50), color);
         }
     }
 }

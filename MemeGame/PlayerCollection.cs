@@ -23,9 +23,9 @@ namespace MemeGame
             height = player_height;
         }
 
-        public void AddPlayer(Point start_location, Heros type, Keys left, Keys right, Keys jump)
+        public void AddPlayer(Point start_location, Heros type, string name, Color color, Keys left, Keys right, Keys jump)
         {
-            Player next = new Player(start_location, width, height, textures[(int)type], left, right, jump);
+            Player next = new Player(start_location, width, height, textures[(int)type], left, right, jump, name,color);
             Add(next);
 
         }
@@ -43,6 +43,14 @@ namespace MemeGame
             foreach (var player in this)
             {
                 player.Draw(spriteBatch);
+            }
+        }
+
+        public void DrawNames(SpriteBatch spriteBatch, SpriteFont font)
+        {
+            foreach(var player in this)
+            {
+                player.DrawName(spriteBatch, font);
             }
         }
     }

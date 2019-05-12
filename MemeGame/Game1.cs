@@ -8,7 +8,8 @@ namespace MemeGame
     enum Screen
     {
         Play,
-        Build
+        Build,
+        Menu
     }
 
     enum Heros
@@ -38,6 +39,7 @@ namespace MemeGame
         int screenWidth, screenHeight;
 
         Texture2D fill;
+        SpriteFont sans;
         
         public Game1()
         {
@@ -80,6 +82,7 @@ namespace MemeGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             fill = loadColorTexture(Color.White);
+            sans = Content.Load<SpriteFont>("sans");
 
             // load in the textures for heros
             List<Texture2D> heroTextures = new List<Texture2D>();
@@ -97,7 +100,7 @@ namespace MemeGame
             builder.loadMap("last");
 
             // delete this sometime
-            players.AddPlayer(new Point(100, 100), Heros.Basic, Keys.Left, Keys.Right, Keys.Up);
+            players.AddPlayer(new Point(100, 100), Heros.Basic,"player 1",Color.Red, Keys.Left, Keys.Right, Keys.Up);
 
             // TODO: use this.Content to load your game content here
         }
@@ -157,8 +160,10 @@ namespace MemeGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.getTransformation());
-            walls.Draw(spriteBatch);
             players.Draw(spriteBatch);
+            walls.Draw(spriteBatch);
+            players.DrawNames(spriteBatch, sans);
+
             spriteBatch.End();
             // TODO: Add your drawing code here
 
