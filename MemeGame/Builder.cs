@@ -17,7 +17,7 @@ namespace MemeGame
     {
         private WallCollection walls;
 
-        private int radius;
+        private readonly int radius;
 
         public Builder(WallCollection walls)
         {
@@ -65,7 +65,7 @@ namespace MemeGame
             // create tiles with left click
             if (mouse.LeftButton == ButtonState.Pressed)
             {
-                walls.createBlock(mousePos.X - radius / 2, mousePos.Y - radius / 2, radius, radius);
+                walls.CreateBlock(mousePos.X - radius / 2, mousePos.Y - radius / 2, radius, radius);
             }
 
             // remove tiles with right click

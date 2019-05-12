@@ -12,7 +12,7 @@ namespace MemeGame
     class Player
     {
         Hero hero;
-        Keys left, right, jump;
+        readonly Keys left, right, jump;
 
         string name;
         Color color;
@@ -27,7 +27,7 @@ namespace MemeGame
             this.color = color;
         }
 
-        private void testInput(int jump_force, int speed)
+        private void TestInput(int jump_force, int speed)
         {
             if (Keyboard.GetState().IsKeyDown(jump))
             {
@@ -49,7 +49,7 @@ namespace MemeGame
 
         public void Update(int gravity, WallCollection walls, int jump_force, int speed)
         {
-            testInput(jump_force,speed);
+            TestInput(jump_force,speed);
 
             hero.Update(gravity, walls);
         }
@@ -61,7 +61,30 @@ namespace MemeGame
 
         public void DrawName(SpriteBatch spriteBatch, SpriteFont font)
         {
-            spriteBatch.DrawString(font, name, new Vector2(hero.Rec.X, hero.Rec.Y - 50), color);
+            spriteBatch.DrawString(font, name, new Vector2(hero.HitBox.Center.X - (name.Length/2 * 15), hero.HitBox.Y - 56), color);
+        }
+
+        public Hero GetHero()
+        {
+            return hero;
+        }
+
+        /// <summary>
+        /// returns a vector for the location of the hero
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetLocation()
+        {
+            return new Vector2(hero.HitBox.Center.X, hero.HitBox.Center.Y);
+        }
+
+        /// <summary>
+        /// returns a Point value for the location
+        /// </summary>
+        /// <returns></returns>
+        public Point GetPosition()
+        {
+            return hero.HitBox.Center;
         }
     }
 }

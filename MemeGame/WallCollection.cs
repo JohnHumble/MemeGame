@@ -10,8 +10,9 @@ namespace MemeGame
 {
     class WallCollection : List<Wall>
     {
-        Texture2D texture;
-        int wallSize;
+        readonly Texture2D texture;
+        readonly int wallSize;
+        private Vector2 mid, difference;
 
         /// <summary>
         /// Constructor
@@ -22,12 +23,14 @@ namespace MemeGame
         {
             this.texture = texture;
             wallSize = size;
+            mid = difference = new Vector2(0, 0);
         }
 
         public WallCollection(Texture2D texture, Map map)
         {
             this.texture = texture;
             loadFromMap(map);
+            mid = difference = new Vector2(0, 0);
         }
 
         public void loadFromMap(Map map)
@@ -38,6 +41,8 @@ namespace MemeGame
                 Wall next = new Wall(data, texture);
                 Add(next);
             }
+
+            CalculateMidDifference();
         }
 
         public void createFloor(int x, int y, int count)
@@ -47,18 +52,21 @@ namespace MemeGame
                 Wall next = new Wall(x + (i * wallSize), y, wallSize, wallSize, texture);
                 Add(next);
             }
+
+            CalculateMidDifference();
         }
 
-        public void createWall(int x, int y, int count)
+        public void CreateWall(int x, int y, int count)
         {
             for (int i = 0; i < count; i++)
             {
                 Wall next = new Wall(x, y + (i * wallSize), wallSize, wallSize, texture);
                 Add(next);
             }
+            CalculateMidDifference();
         }
 
-        public void createBlock(int x, int y, int width, int height)
+        public void CreateBlock(int x, int y, int width, int height)
         {
             int cols = width / wallSize;
             int rows = height / wallSize;
@@ -77,6 +85,7 @@ namespace MemeGame
                     }
                 }
             }
+            CalculateMidDifference();
         }
 
         public Rectangle Intersects(Rectangle other)
@@ -104,6 +113,43 @@ namespace MemeGame
             {
                 wall.Draw(spriteBatch);
             }
+        }
+
+        private void CalculateMidDifference()
+        {
+            Vector2 mid = new Vector2(0, 0);
+            foreach (var wall in this)
+            {
+                mid += wall.GetVector();
+            }
+
+            mid.X /= Count;
+            mid.Y /= Count;
+
+            this.mid = mid;
+
+            float maxY = int.MinValue;
+            float maxX = int.MinValue;
+            float minY = int.MaxValue;
+            float minX = int.MaxValue;
+            foreach (var wall in this)
+            {
+                maxX = Math.Max(maxX, wall.GetVector().X);
+                maxY = Math.Max(maxY, wall.GetVector().Y);
+                minX = Math.Min(minX, wall.GetVector().X);
+                minY = Math.Min(minY, wall.GetVector().Y);
+            }
+            difference = new Vector2(Math.Abs(maxX - minX), Math.Abs(maxY - minY));
+        }
+        
+        public Vector2 GetDifference()
+        {
+            return difference;
+        }
+
+        public Vector2 GetMid()
+        {
+            return mid;
         }
     }
 }
