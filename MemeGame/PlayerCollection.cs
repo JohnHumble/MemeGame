@@ -11,10 +11,10 @@ namespace MemeGame
 {
     class PlayerCollection : List<Player>
     {
-        List<Texture2D> textures;
-        int speed, jump, width,height;
+        readonly List<Texture2D> textures;
+        readonly int speed, jump, width, height;
 
-        public PlayerCollection(List<Texture2D> textures,int player_width,int player_height,int speed = 5, int jump = 20)
+        public PlayerCollection(List<Texture2D> textures,int player_width,int player_height,int speed = 5, int jump = 28)
         {
             this.textures = textures;
             this.speed = speed;
@@ -36,6 +36,36 @@ namespace MemeGame
             {
                 player.Update(gravity, walls, jump, speed);
             }
+        }
+
+        public Vector2 GetPlayerMid()
+        {
+            Vector2 mid = new Vector2(0, 0);
+            foreach (var player in this)
+            {
+                mid += player.GetLocation();
+            }
+
+            mid.X /= Count;
+            mid.Y /= Count;
+
+            return mid;
+        }
+        
+        public Vector2 GetDifference()
+        {
+            float maxY = int.MinValue;
+            float maxX = int.MinValue;
+            float minY = int.MaxValue;
+            float minX = int.MaxValue;
+            foreach (var player in this)
+            {
+                maxX = Math.Max(maxX, player.GetLocation().X);
+                maxY = Math.Max(maxY, player.GetLocation().Y);
+                minX = Math.Min(minX, player.GetLocation().X);
+                minY = Math.Min(minY, player.GetLocation().Y);
+            }
+            return new Vector2(Math.Abs(maxX - minX), Math.Abs(maxY - minY));
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -13,7 +13,7 @@ namespace MemeGame
         public Rectangle Area { get; set; }
         public int Health { get; set; }
 
-        private Texture2D texture;
+        private readonly Texture2D texture;
 
         /// <summary>
         /// Constructor to create a wall objectect
@@ -51,6 +51,10 @@ namespace MemeGame
         public Point GetPoint()
         {
             return new Point(Area.X, Area.Y);
+        }
+        public Vector2 GetVector()
+        {
+            return new Vector2(Area.Center.X, Area.Center.Y);
         }
 
         public int distance(Point point)

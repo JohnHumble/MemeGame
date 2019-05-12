@@ -17,19 +17,22 @@ namespace MemeGame
         const int DAMPEN = 2; // amount to slow down on ground.
 
         // location and physics based
-        public Rectangle Rec { get; private set; }
+        public Rectangle HitBox { get; private set; }
         public Point Velocity { get; private set; }
         public int AccelX { get; set; }
         public int AccelY { get; set; }
         public bool OnGround { get; private set; }
 
-        private Texture2D texture;
+        private readonly Texture2D texture;
         private Rectangle source;
-        int animationFrame = 0;
+        private Rectangle renderRec;
+        private int animationFrame;
+        private readonly int hit_buffer_x;
+        private readonly int hit_buffer_y;
 
         // number of hitpoints
         public int Health { get; private set; }
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -41,13 +44,19 @@ namespace MemeGame
         /// <param name="acceleration">Starting acceleration(gravity)</param>
         public Hero(Point location, int width, int height, int health, Texture2D texture)
         {
-            Rec = new Rectangle(location, new Point(width, height));
+            animationFrame = 0;
+            hit_buffer_x = width / 8;
+            hit_buffer_y = height / 8;
+
+            renderRec = new Rectangle(location, new Point(width, height));
+            HitBox = new Rectangle(renderRec.X + hit_buffer_x, renderRec.Y + hit_buffer_y, renderRec.Width - hit_buffer_x / 2, renderRec.Height - hit_buffer_y);
             source = new Rectangle(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
             this.texture = texture;
             Health = health;
             AccelX = 0;
             AccelY = 0;
             OnGround = false;
+
         }
 
         public void Update(int gravity, WallCollection walls)
@@ -55,7 +64,7 @@ namespace MemeGame
             AccelY = gravity;
 
             // Save Velocity and Rec values to be manipulated
-            Rectangle rectangle = Rec;
+            Rectangle rectangle = HitBox;
             Point velocity = Velocity;
 
             // update velocity based on acceeleration
@@ -93,7 +102,7 @@ namespace MemeGame
 
             // test to see if on the ground
             OnGround = false;
-            if (walls.Intersects(new Rectangle(Rec.X, Rec.Bottom, Rec.Width, 1)) != new Rectangle())
+            if (walls.Intersects(new Rectangle(HitBox.X, HitBox.Bottom, HitBox.Width, 1)) != new Rectangle())
             {
                 OnGround = true;
             }
@@ -192,7 +201,7 @@ namespace MemeGame
             
             // reset Velocity and Rec values
             Velocity = velocity;
-            Rec = rectangle;
+            HitBox = rectangle;
         }
 
         /// <summary>
@@ -236,6 +245,9 @@ namespace MemeGame
         /// <param name="spriteBatch">an already begun spritebatch</param>
         public void Draw(SpriteBatch spriteBatch)
         {
+            renderRec.X = HitBox.X - hit_buffer_x;
+            renderRec.Y = HitBox.Y - hit_buffer_y;
+
             int frameSpeed = 5;
 
 
@@ -260,7 +272,7 @@ namespace MemeGame
                 animationFrame = 0;
                 source.Y = 0;
             }
-            spriteBatch.Draw(texture, Rec, source, Color.White);
+            spriteBatch.Draw(texture, renderRec, source, Color.White);
 
             animationFrame++;
 

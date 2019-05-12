@@ -15,7 +15,8 @@ namespace MemeGame
     enum Heros
     {
         Basic,
-        Chungus
+        Chungus,
+        Doge
     }
 
     /// <summary>
@@ -65,7 +66,7 @@ namespace MemeGame
             graphics.ApplyChanges();
 
             screen = Screen.Build;
-            camera = new Camera(0,0,.5f,screenWidth,screenHeight);
+            camera = new Camera(0,0,1f,screenWidth,screenHeight);
 
             // TODO: Add your initialization logic here
 
@@ -88,8 +89,13 @@ namespace MemeGame
             // load in the textures for heros
             List<Texture2D> heroTextures = new List<Texture2D>();
 
+            // load textures into the list
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
             heroTextures.Add(heroTex);
+            Texture2D chungTex = Content.Load<Texture2D>("chungus");
+            heroTextures.Add(chungTex);
+            Texture2D dogeTex = Content.Load<Texture2D>("doge");
+            heroTextures.Add(dogeTex);
             
             players = new PlayerCollection(heroTextures, UNIT_SIZE / 3 * 2, UNIT_SIZE);
 
@@ -102,7 +108,8 @@ namespace MemeGame
             builder.loadMap("last");
 
             // delete this sometime
-            players.AddPlayer(new Point(100, 100), Heros.Basic,"player 1",Color.Red, Keys.Left, Keys.Right, Keys.Up);
+            players.AddPlayer(new Point(100, 100), Heros.Chungus,"player 1",Color.Red, Keys.Left, Keys.Right, Keys.Up);
+            players.AddPlayer(new Point(200, 100), Heros.Doge, "Player 2", Color.Blue, Keys.A, Keys.D, Keys.W);
 
             // TODO: use this.Content to load your game content here
         }
@@ -137,6 +144,12 @@ namespace MemeGame
             if (screen == Screen.Play)
             {
                 players.Update(GRAV, walls);
+                camera.trackTo(players.GetPlayerMid(), players.GetDifference(),walls.GetMid(), walls.GetDifference());
+
+                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+                {
+                    screen = Screen.Build;
+                }
             }
             else if (screen == Screen.Build)
             {
@@ -167,7 +180,11 @@ namespace MemeGame
             players.DrawNames(spriteBatch, sans);
 
             spriteBatch.End();
-            // TODO: Add your drawing code here
+
+            // Camera test
+            spriteBatch.Begin();
+            spriteBatch.DrawString(sans, "" + camera.scale, new Vector2(100, 100), Color.Yellow);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

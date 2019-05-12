@@ -13,7 +13,7 @@ namespace MemeGame
         public float scale;
         private Matrix transform;
 
-        private int screenWidth, screenHeight;
+        private readonly int screenWidth, screenHeight;
 
         // initalize
         public Camera(Vector2 loc)
@@ -56,16 +56,58 @@ namespace MemeGame
             //return location;
         }
 
+        private Vector2 adjustVec(Vector2 vector)
+        {
+            return new Vector2(-vector.X + screenWidth / 2 / scale, -vector.Y + screenHeight / 2 / scale);
+        }
+
         // change location.
         public void setLocation(Vector2 loc)
         {
-            loc.X *= -1;
-            loc.Y *= -1;
-            location = loc;
+            location = adjustVec(loc);
         }
         public void setLocation(float x, float y)
         {
-            location = new Vector2(x * -1, y * -1);
+            setLocation(new Vector2(x,y));
+        }
+
+        const float DAMPEN = 32;
+        // the camera eases into the location
+        public void trackTo(Vector2 loc)
+        {
+            loc = adjustVec(loc);
+            Vector2 distance = loc - location;
+            distance.X /= DAMPEN;
+            distance.Y /= DAMPEN;
+
+            location += distance;
+        }
+        // tracks with scale
+        const int SIDE_BUFFER = 300;
+        const float MIN_SCALE = .5f;
+        public void trackTo(Vector2 loc, Vector2 difference, Vector2 worldMid, Vector2 worldDifference)
+        {
+            difference.X = Math.Min(difference.X, worldDifference.X);
+            difference.Y = Math.Min(difference.Y, worldDifference.Y);
+            
+            if (Tool.distance(loc,worldMid) > Math.Abs(worldDifference.X) + Math.Abs(worldDifference.Y))
+            {
+                loc = worldMid;
+            }
+
+            if (difference.Y == 0)
+                difference.Y = 1;
+            if (difference.X == 0)
+                difference.X = 1;
+
+            difference.X += SIDE_BUFFER * 2;
+            difference.Y += SIDE_BUFFER * 2;
+           
+            float target = Math.Max(MIN_SCALE, Math.Min(1, Math.Min(screenWidth / difference.X, screenHeight / difference.Y)));
+
+            scale += (target - scale) / DAMPEN;
+
+            trackTo(loc);
         }
 
         // change scale
