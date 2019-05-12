@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace MemeGame
 {
@@ -9,7 +10,13 @@ namespace MemeGame
         Play,
         Build
     }
-    
+
+    enum Heros
+    {
+        Basic,
+        Chungus
+    }
+
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
@@ -26,7 +33,7 @@ namespace MemeGame
         Builder builder;
 
         WallCollection walls;
-        Hero player1;
+        PlayerCollection players;
 
         int screenWidth, screenHeight;
 
@@ -56,7 +63,7 @@ namespace MemeGame
             graphics.ApplyChanges();
 
             screen = Screen.Build;
-            camera = new Camera(0,0,1,screenWidth,screenHeight);
+            camera = new Camera(0,0,.5f,screenWidth,screenHeight);
 
             // TODO: Add your initialization logic here
 
@@ -74,8 +81,12 @@ namespace MemeGame
 
             fill = loadColorTexture(Color.White);
 
+            // load in the textures for heros
+            List<Texture2D> heroTextures = new List<Texture2D>();
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
-            player1 = new Hero(new Point(300, 100), UNIT_SIZE/3 * 2, UNIT_SIZE, 20, heroTex, 0, 0);
+            heroTextures.Add(heroTex);
+            
+            players = new PlayerCollection(heroTextures, UNIT_SIZE / 3 * 2, UNIT_SIZE);
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
             walls = new WallCollection(wallTexture, TILE_SIZE);
@@ -84,7 +95,10 @@ namespace MemeGame
             builder = new Builder(walls);
 
             builder.loadMap("last");
-            
+
+            // delete this sometime
+            players.AddPlayer(new Point(100, 100), Heros.Basic, Keys.Left, Keys.Right, Keys.Up);
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -103,9 +117,8 @@ namespace MemeGame
         {
             // TODO: Unload any non ContentManager content here
         }
-
-        const int ACCEL = 5;
-        const int JUMP = 20;
+        
+        const int GRAV = 2;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -118,29 +131,7 @@ namespace MemeGame
 
             if (screen == Screen.Play)
             {
-                // user control
-                if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                {
-                    player1.jump(JUMP);
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                {
-                    player1.moveLeft(ACCEL);
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                {
-                    player1.moveRight(ACCEL);
-                }
-                if (Keyboard.GetState().IsKeyUp(Keys.Left) && Keyboard.GetState().IsKeyUp(Keys.Right))
-                {
-                    player1.stop();
-                }
-                if (Keyboard.GetState().IsKeyDown(Keys.RightShift))
-                {
-                    screen = Screen.Build;
-                }
-
-                player1.Update(2, walls);
+                players.Update(GRAV, walls);
             }
             else if (screen == Screen.Build)
             {
@@ -150,7 +141,7 @@ namespace MemeGame
                     screen = Screen.Play;
                 }
 
-                builder.building(Mouse.GetState());
+                builder.building(Mouse.GetState(),camera);
             }
             // TODO: Add your update logic here
 
@@ -167,7 +158,7 @@ namespace MemeGame
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.getTransformation());
             walls.Draw(spriteBatch);
-            player1.Draw(spriteBatch,fill);
+            players.Draw(spriteBatch);
             spriteBatch.End();
             // TODO: Add your drawing code here
 

@@ -39,14 +39,14 @@ namespace MemeGame
         /// <param name="health">the amout of hp for the hero</param>
         /// <param name="texture">the texture of the hero</param>
         /// <param name="acceleration">Starting acceleration(gravity)</param>
-        public Hero(Point location, int width, int height, int health, Texture2D texture, int acceleration_x, int acceleration_y)
+        public Hero(Point location, int width, int height, int health, Texture2D texture)
         {
             Rec = new Rectangle(location, new Point(width, height));
             source = new Rectangle(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
             this.texture = texture;
             Health = health;
-            AccelX = acceleration_x;
-            AccelY = acceleration_y;
+            AccelX = 0;
+            AccelY = 0;
             OnGround = false;
         }
 
@@ -234,7 +234,7 @@ namespace MemeGame
         /// Draws the hero object
         /// </summary>
         /// <param name="spriteBatch">an already begun spritebatch</param>
-        public void Draw(SpriteBatch spriteBatch, Texture2D fill)
+        public void Draw(SpriteBatch spriteBatch)
         {
             int frameSpeed = 5;
 

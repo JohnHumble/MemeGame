@@ -43,6 +43,11 @@ namespace MemeGame
             transform = new Matrix();
         }
 
+        public Point transformMouse(int x, int y)
+        {
+            return new Point((int)(x / scale - location.X), (int)(y / scale - location.Y));
+        }
+
         public Vector2 getMid()
         {
             float midX = -location.X + (screenWidth / 2) / scale;
