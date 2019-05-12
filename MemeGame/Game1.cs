@@ -15,10 +15,12 @@ namespace MemeGame
     /// </summary>
     public class Game1 : Game
     {
-        const int UNIT_SIZE = 64;
+        const int UNIT_SIZE = 120;
+        const int TILE_SIZE = 32;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Camera camera;
         Screen screen;
 
         Builder builder;
@@ -27,6 +29,8 @@ namespace MemeGame
         Hero player1;
 
         int screenWidth, screenHeight;
+
+        Texture2D fill;
         
         public Game1()
         {
@@ -52,6 +56,7 @@ namespace MemeGame
             graphics.ApplyChanges();
 
             screen = Screen.Build;
+            camera = new Camera(new Vector2(0, 0));
 
             // TODO: Add your initialization logic here
 
@@ -66,16 +71,14 @@ namespace MemeGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-<<<<<<< HEAD
-            
-=======
 
->>>>>>> 09b6a858551a028f56c90e2332598da05a9be6da
+            fill = loadColorTexture(Color.White);
+
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
-            player1 = new Hero(new Point(300, 100), UNIT_SIZE, UNIT_SIZE, 20, heroTex, 0, 0);
+            player1 = new Hero(new Point(300, 100), UNIT_SIZE/3 * 2, UNIT_SIZE, 20, heroTex, 0, 0);
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
-            walls = new WallCollection(wallTexture, UNIT_SIZE/2);
+            walls = new WallCollection(wallTexture, TILE_SIZE);
             //walls.createBlock(0, 200, screenWidth, screenHeight);
 
             builder = new Builder(walls);
@@ -160,9 +163,9 @@ namespace MemeGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.getTransformation());
             walls.Draw(spriteBatch);
-            player1.Draw(spriteBatch);
+            player1.Draw(spriteBatch,fill);
             spriteBatch.End();
             // TODO: Add your drawing code here
 
