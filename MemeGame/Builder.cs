@@ -29,6 +29,7 @@ namespace MemeGame
             Map saveMap = new Map(walls);
             string appPath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             appPath +="\\"+ fileName;
+            
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(appPath, FileMode.Create, FileAccess.Write);
 
@@ -36,18 +37,25 @@ namespace MemeGame
             stream.Close();
         }
 
-        public Map loadMap(string fileName)
+       
+
+        public void loadMap(string fileName)
         {
             IFormatter formatter = new BinaryFormatter();
 
             string appPath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             appPath +="\\"+ fileName;
 
+            if (File.Exists(appPath))
+            {
+
             Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             Map load = (Map)formatter.Deserialize(stream);
 
+
             stream.Close();
-            return load;
+            walls.loadFromMap(load);
+            }
         }
 
         public void building(MouseState mouse)
