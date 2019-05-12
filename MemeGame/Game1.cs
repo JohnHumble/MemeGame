@@ -56,7 +56,7 @@ namespace MemeGame
             graphics.ApplyChanges();
 
             screen = Screen.Build;
-            camera = new Camera(new Vector2(0, 0));
+            camera = new Camera(0,0,1,screenWidth,screenHeight);
 
             // TODO: Add your initialization logic here
 
@@ -104,6 +104,8 @@ namespace MemeGame
             // TODO: Unload any non ContentManager content here
         }
 
+        const int ACCEL = 5;
+        const int JUMP = 20;
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -119,15 +121,15 @@ namespace MemeGame
                 // user control
                 if (Keyboard.GetState().IsKeyDown(Keys.Up))
                 {
-                    player1.jump(20);
+                    player1.jump(JUMP);
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 {
-                    player1.moveLeft(10);
+                    player1.moveLeft(ACCEL);
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.Right))
                 {
-                    player1.moveRight(10);
+                    player1.moveRight(ACCEL);
                 }
                 if (Keyboard.GetState().IsKeyUp(Keys.Left) && Keyboard.GetState().IsKeyUp(Keys.Right))
                 {

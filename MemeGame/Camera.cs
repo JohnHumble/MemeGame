@@ -38,7 +38,7 @@ namespace MemeGame
         {
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
-            location = new Vector2(x, y);
+            location = new Vector2(-x + screenWidth/2f, -y + screenHeight/2f);
             scale = scl;
             transform = new Matrix();
         }
