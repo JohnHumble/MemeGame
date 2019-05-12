@@ -15,7 +15,8 @@ namespace MemeGame
     enum Heros
     {
         Basic,
-        Chungus
+        Chungus,
+        Doge
     }
 
     /// <summary>
@@ -93,6 +94,8 @@ namespace MemeGame
             heroTextures.Add(heroTex);
             Texture2D chungTex = Content.Load<Texture2D>("chungus");
             heroTextures.Add(chungTex);
+            Texture2D dogeTex = Content.Load<Texture2D>("doge");
+            heroTextures.Add(dogeTex);
             
             players = new PlayerCollection(heroTextures, UNIT_SIZE / 3 * 2, UNIT_SIZE);
 
@@ -106,7 +109,7 @@ namespace MemeGame
 
             // delete this sometime
             players.AddPlayer(new Point(100, 100), Heros.Chungus,"player 1",Color.Red, Keys.Left, Keys.Right, Keys.Up);
-            players.AddPlayer(new Point(200, 100), Heros.Basic, "Player 2", Color.Blue, Keys.A, Keys.D, Keys.W);
+            players.AddPlayer(new Point(200, 100), Heros.Doge, "Player 2", Color.Blue, Keys.A, Keys.D, Keys.W);
 
             // TODO: use this.Content to load your game content here
         }

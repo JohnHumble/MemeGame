@@ -37,11 +37,7 @@
 /processorParam:TextureFormat=Color
 /build:chungus.png
 
-<<<<<<< HEAD
-#begin newBasic.png
-=======
 #begin doge.png
->>>>>>> dc1887151563ad729b2d3a1e1263d31988cac180
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -51,11 +47,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-<<<<<<< HEAD
-/build:newBasic.png
-=======
 /build:doge.png
->>>>>>> dc1887151563ad729b2d3a1e1263d31988cac180
+
+#begin newBasic.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:newBasic.png
 
 #begin sans.spritefont
 /importer:FontDescriptionImporter
