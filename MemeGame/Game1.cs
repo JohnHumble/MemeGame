@@ -81,11 +81,13 @@ namespace MemeGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+
             fill = loadColorTexture(Color.White);
             sans = Content.Load<SpriteFont>("sans");
 
             // load in the textures for heros
             List<Texture2D> heroTextures = new List<Texture2D>();
+
             Texture2D heroTex = Content.Load<Texture2D>("newBasic");
             heroTextures.Add(heroTex);
             
