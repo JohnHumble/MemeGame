@@ -115,6 +115,8 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\blocks.png" />
+    <Content Include="Content\chungus.png" />
     <Content Include="Content\newBasic.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
