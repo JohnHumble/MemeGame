@@ -39,14 +39,14 @@ namespace MemeGame
         /// <param name="health">the amout of hp for the hero</param>
         /// <param name="texture">the texture of the hero</param>
         /// <param name="acceleration">Starting acceleration(gravity)</param>
-        public Hero(Point location, int width, int height, int health, Texture2D texture, int acceleration_x, int acceleration_y)
+        public Hero(Point location, int width, int height, int health, Texture2D texture)
         {
             Rec = new Rectangle(location, new Point(width, height));
             source = new Rectangle(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
             this.texture = texture;
             Health = health;
-            AccelX = acceleration_x;
-            AccelY = acceleration_y;
+            AccelX = 0;
+            AccelY = 0;
             OnGround = false;
         }
 
@@ -99,10 +99,32 @@ namespace MemeGame
             }
 
             // test to see if on the ground
-            // Test X
             Rectangle test;
             Rectangle wall = new Rectangle();
             Point offset = new Point(0);
+            // Test Y
+            if (velocity.Y > 0) // fall on v
+            {
+                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height + velocity.Y);
+                wall = walls.Intersects(test);
+                if (wall != new Rectangle())
+                {
+                    velocity.Y = wall.Top - rectangle.Bottom;
+                }
+            }
+            else if (velocity.Y < 0) // hit from top ^
+            {
+                test = new Rectangle(rectangle.X, rectangle.Y + velocity.Y, rectangle.Width, rectangle.Height - velocity.Y );
+                wall = walls.Intersects(test);
+                if (wall != new Rectangle())
+                {
+                    velocity.Y = 0;
+                }
+            }
+
+            rectangle.Y += velocity.Y;
+            
+            // Test X
             if (velocity.X > 0) // hit from right side ->|
             {
                 test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height/2);
@@ -124,6 +146,11 @@ namespace MemeGame
                         if (test == new Rectangle())
                         {
                             offset.Y -= wall.Height;
+                        }
+                        else
+                        {
+                            velocity.X = -rectangle.Right + wall.Left;
+                            AccelX = 0;
                         }
                     }
                 }
@@ -150,33 +177,18 @@ namespace MemeGame
                         {
                             offset.Y -= wall.Height;
                         }
+                        else
+                        {
+                            velocity.X = wall.Right - rectangle.Left;
+                            AccelX = 0;
+                        }
                     }
                 }
             }
 
-            // Test Y
-            if (velocity.Y > 0) // fall on v
-            {
-                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height + velocity.Y);
-                wall = walls.Intersects(test);
-                if (wall != new Rectangle())
-                {
-                    velocity.Y = wall.Top - rectangle.Bottom;
-                }
-            }
-            else if (velocity.Y < 0) // hit from top ^
-            {
-                test = new Rectangle(rectangle.X, rectangle.Y + velocity.Y, rectangle.Width, rectangle.Height - velocity.Y );
-                wall = walls.Intersects(test);
-                if (wall != new Rectangle())
-                {
-                    velocity.Y = 0;
-                }
-            }
-            
             // uppdate the rectangle based on velocity
+            rectangle.Y += offset.Y;
             rectangle.X += velocity.X + offset.X;
-            rectangle.Y += velocity.Y + offset.Y;
             
             // reset Velocity and Rec values
             Velocity = velocity;
@@ -251,6 +263,24 @@ namespace MemeGame
             spriteBatch.Draw(texture, Rec, source, Color.White);
 
             animationFrame++;
+
+            // DELET THIS DEBUGING FOR COLLITIONS
+    /*        Rectangle test,rectangle, whole;
+            Point velocity = Velocity;
+            rectangle = Rec;
+            if (Velocity.X > 0)
+            {
+                test = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height / 2);
+                whole = new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + velocity.X, rectangle.Height);
+            }
+            else
+            {
+                test = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height/2);
+                whole = new Rectangle(rectangle.X + velocity.X, rectangle.Y, rectangle.Width - velocity.X, rectangle.Height);
+            }
+            spriteBatch.Draw(fill, whole, source, Color.Blue);
+            spriteBatch.Draw(fill, test, source, Color.Red);
+            */
         }
     }
 }

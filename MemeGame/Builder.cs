@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,12 +59,13 @@ namespace MemeGame
             }
         }
 
-        public void building(MouseState mouse)
+        public void building(MouseState mouse, Camera camera)
         {
+            Point mousePos = camera.transformMouse(mouse.X, mouse.Y);
             // create tiles with left click
             if (mouse.LeftButton == ButtonState.Pressed)
             {
-                walls.createBlock(mouse.X - radius / 2, mouse.Y - radius / 2, radius, radius);
+                walls.createBlock(mousePos.X - radius / 2, mousePos.Y - radius / 2, radius, radius);
             }
 
             // remove tiles with right click
@@ -72,7 +74,7 @@ namespace MemeGame
                 for (int i = 0; i < walls.Count; i++)
                 {
                     Wall wall = walls[i];
-                    if (wall.distance(mouse.X,mouse.Y) < radius){
+                    if (wall.distance(mousePos) < radius){
                         walls.RemoveAt(i);
                         i--;
                     }
