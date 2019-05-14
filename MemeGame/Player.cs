@@ -12,23 +12,28 @@ namespace MemeGame
     class Player
     {
         Hero hero;
-        readonly Keys left, right, jump;
+        readonly Keys left, right, jump, fire;
 
         string name;
         Color color;
 
-        public Player(Point StartLocation, int width, int height, Texture2D texture, Keys left, Keys right, Keys jump, string name, Color color)
+        public Player(Point StartLocation, int width, int height, Texture2D texture, Keys left, Keys right, Keys jump, Keys shoot, string name, Color color)
         {
             hero = new Hero(StartLocation, width, height, 60, texture);
             this.left = left;
             this.right = right;
             this.jump = jump;
+            this.fire = shoot;
             this.name = name;
             this.color = color;
         }
 
         private void TestInput(int jump_force, int speed)
         {
+            if (Keyboard.GetState().IsKeyDown(fire))
+            {
+                hero.fire();
+            }
             if (Keyboard.GetState().IsKeyDown(jump))
             {
                 hero.jump(jump_force);
@@ -47,11 +52,25 @@ namespace MemeGame
             }
         }
 
-        public void Update(int gravity, WallCollection walls, int jump_force, int speed)
+        public void Update(int gravity, WallCollection walls,PlayerCollection players,WeaponCollection weapons, int jump_force, int speed)
         {
             TestInput(jump_force,speed);
 
-            hero.Update(gravity, walls);
+            hero.Update(gravity, walls,players);
+
+            if (hero.weapon == null)
+            {
+                foreach(var weapon in weapons)
+                {
+                    int dis = Tool.distance(hero.GetPoint(), weapon.GetPoint());
+                    if (dis < 100)
+                    {
+                        hero.pickup(weapon);
+                        weapons.Remove(weapon);
+                        break;
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

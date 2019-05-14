@@ -38,6 +38,16 @@ namespace MemeGame
 
             Area = new Rectangle(wall.x, wall.y, wall.width, wall.height);
         }
+        /// <summary>
+        ///  Used to damage a wall object
+        /// </summary>
+        /// <param name="damage">the damage value</param>
+        /// <returns> will be true if the wall goes to 0 or less and needs to be removed </returns>
+        public bool Damage(int damage)
+        {
+            Health -= damage;
+            return Health <= 0;
+        }
 
         /// <summary>
         /// Method that draws the wall object. 

@@ -45,6 +45,9 @@
     <Compile Include="Builder.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Gun.cs" />
+    <Compile Include="Shot.cs" />
+    <Compile Include="Weapon.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Player.cs" />
@@ -55,6 +58,7 @@
     <Compile Include="Wall.cs" />
     <Compile Include="WallCollection.cs" />
     <Compile Include="WallData.cs" />
+    <Compile Include="WeaponCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

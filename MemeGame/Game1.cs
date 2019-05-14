@@ -36,6 +36,7 @@ namespace MemeGame
 
         WallCollection walls;
         PlayerCollection players;
+        WeaponCollection weapons;
 
         int screenWidth, screenHeight;
 
@@ -108,9 +109,14 @@ namespace MemeGame
             builder.loadMap("last");
 
             // delete this sometime
-            players.AddPlayer(new Point(100, 100), Heros.Chungus,"player 1",Color.Red, Keys.Left, Keys.Right, Keys.Up);
-            players.AddPlayer(new Point(200, 100), Heros.Doge, "Player 2", Color.Blue, Keys.A, Keys.D, Keys.W);
+            players.AddPlayer(new Point(100, 100), Heros.Chungus,"player 1",Color.Red, Keys.Left, Keys.Right, Keys.Up,Keys.Space);
+            players.AddPlayer(new Point(200, 100), Heros.Doge, "Player 2", Color.Blue, Keys.A, Keys.D, Keys.W, Keys.LeftShift);
 
+
+            weapons = new WeaponCollection();
+
+            Gun gun = new Gun(new Rectangle(0, 0, UNIT_SIZE, UNIT_SIZE / 4), fill, fill, 2);
+            weapons.Add(gun);
             // TODO: use this.Content to load your game content here
         }
 
@@ -143,10 +149,10 @@ namespace MemeGame
 
             if (screen == Screen.Play)
             {
-                players.Update(GRAV, walls);
+                players.Update(GRAV, walls, players, weapons);
                 camera.trackTo(players.GetPlayerMid(), players.GetDifference(),walls.GetMid(), walls.GetDifference());
 
-                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+                if (Keyboard.GetState().IsKeyDown(Keys.RightShift))
                 {
                     screen = Screen.Build;
                 }
@@ -178,12 +184,12 @@ namespace MemeGame
             players.Draw(spriteBatch);
             walls.Draw(spriteBatch);
             players.DrawNames(spriteBatch, sans);
-
+            weapons.Draw(spriteBatch);
             spriteBatch.End();
 
             // Camera test
             spriteBatch.Begin();
-            spriteBatch.DrawString(sans, "" + camera.scale, new Vector2(100, 100), Color.Yellow);
+          //  spriteBatch.DrawString(sans, "" + camera.scale, new Vector2(100, 100), Color.Yellow);
             spriteBatch.End();
 
             base.Draw(gameTime);

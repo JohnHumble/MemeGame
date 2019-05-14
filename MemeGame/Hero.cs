@@ -15,6 +15,7 @@ namespace MemeGame
         const int IMAGE_HEIGHT = 120;
         const int MAX_SPEED = 8; // the maximum velocity on the ground.
         const int DAMPEN = 2; // amount to slow down on ground.
+        const int CLIP_DIVISOR = 4; // inversly proportional to the amout of clipping
 
         // location and physics based
         public Rectangle HitBox { get; private set; }
@@ -22,7 +23,9 @@ namespace MemeGame
         public int AccelX { get; set; }
         public int AccelY { get; set; }
         public bool OnGround { get; private set; }
+        public bool IsRight { get; private set; }
 
+        // Rendering
         private readonly Texture2D texture;
         private Rectangle source;
         private Rectangle renderRec;
@@ -30,8 +33,9 @@ namespace MemeGame
         private readonly int hit_buffer_x;
         private readonly int hit_buffer_y;
 
-        // number of hitpoints
+        // game values
         public int Health { get; private set; }
+        public Weapon weapon;
 
         /// <summary>
         /// Constructor
@@ -45,8 +49,8 @@ namespace MemeGame
         public Hero(Point location, int width, int height, int health, Texture2D texture)
         {
             animationFrame = 0;
-            hit_buffer_x = width / 8;
-            hit_buffer_y = height / 8;
+            hit_buffer_x = width / CLIP_DIVISOR;
+            hit_buffer_y = height / CLIP_DIVISOR;
 
             renderRec = new Rectangle(location, new Point(width, height));
             HitBox = new Rectangle(renderRec.X + hit_buffer_x, renderRec.Y + hit_buffer_y, renderRec.Width - hit_buffer_x / 2, renderRec.Height - hit_buffer_y);
@@ -57,9 +61,10 @@ namespace MemeGame
             AccelY = 0;
             OnGround = false;
 
+            weapon = null;
         }
 
-        public void Update(int gravity, WallCollection walls)
+        public void Update(int gravity, WallCollection walls, PlayerCollection players)
         {
             AccelY = gravity;
 
@@ -195,6 +200,12 @@ namespace MemeGame
                 }
             }
 
+            // update weapon if exists
+            if (weapon != null)
+            {
+                weapon.Update(this, walls, players);
+            }
+
             // uppdate the rectangle based on velocity
             rectangle.Y += offset.Y;
             rectangle.X += velocity.X + offset.X;
@@ -202,6 +213,25 @@ namespace MemeGame
             // reset Velocity and Rec values
             Velocity = velocity;
             HitBox = rectangle;
+        }
+
+        public void pickup(Weapon weapon)
+        {
+            this.weapon = weapon;
+        }
+
+        public void drop(WeaponCollection weapons)
+        {
+            weapons.Add(weapon);
+            weapon = null;
+        }
+
+        public void fire()
+        {
+            if (weapon != null)
+            {
+                weapon.Fire();
+            }
         }
 
         /// <summary>
@@ -224,10 +254,7 @@ namespace MemeGame
         public void moveRight(int force)
         {
             AccelX = force;
-        }
-        public void stop()
-        {
-            AccelX = 0;
+            IsRight = true;
         }
 
         /// <summary>
@@ -237,6 +264,15 @@ namespace MemeGame
         public void moveLeft(int force)
         {
             AccelX = -force;
+            IsRight = false;
+        }
+
+        /// <summary>
+        /// sets sideways speed to 0
+        /// </summary>
+        public void stop()
+        {
+            AccelX = 0;
         }
 
         /// <summary>
@@ -276,6 +312,11 @@ namespace MemeGame
 
             animationFrame++;
 
+            if (weapon != null)
+            {
+                weapon.Draw(spriteBatch);
+            }
+
             // DELET THIS DEBUGING FOR COLLITIONS
     /*        Rectangle test,rectangle, whole;
             Point velocity = Velocity;
@@ -293,6 +334,11 @@ namespace MemeGame
             spriteBatch.Draw(fill, whole, source, Color.Blue);
             spriteBatch.Draw(fill, test, source, Color.Red);
             */
+        }
+
+        public Point GetPoint()
+        {
+            return new Point(HitBox.X, HitBox.Y);
         }
     }
 }

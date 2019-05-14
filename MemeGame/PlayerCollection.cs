@@ -23,18 +23,18 @@ namespace MemeGame
             height = player_height;
         }
 
-        public void AddPlayer(Point start_location, Heros type, string name, Color color, Keys left, Keys right, Keys jump)
+        public void AddPlayer(Point start_location, Heros type, string name, Color color, Keys left, Keys right, Keys jump, Keys fire)
         {
-            Player next = new Player(start_location, width, height, textures[(int)type], left, right, jump, name,color);
+            Player next = new Player(start_location, width, height, textures[(int)type], left, right, jump,fire, name,color);
             Add(next);
 
         }
 
-        public void Update(int gravity, WallCollection walls)
+        public void Update(int gravity, WallCollection walls, PlayerCollection players, WeaponCollection weapons)
         {
             foreach (var player in this)
             {
-                player.Update(gravity, walls, jump, speed);
+                player.Update(gravity, walls, players, weapons, jump, speed);
             }
         }
 

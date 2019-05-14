@@ -107,6 +107,23 @@ namespace MemeGame
             return rec;
         }
 
+        public bool TestDamage(Rectangle hit, int damage)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (hit.Intersects(this[i].Area))
+                {
+                    if (this[i].Damage(damage))
+                    {
+                        RemoveAt(i);
+                        i--;
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var wall in this)
