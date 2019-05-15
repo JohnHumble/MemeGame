@@ -17,7 +17,7 @@ namespace MemeGame
         private int damage;
         private int decay;
 
-        public Shot(Texture2D texture, Rectangle rectangle, int damage, int speed = 10, int decay = 240)
+        public Shot(Texture2D texture, Rectangle rectangle, int damage, int speed = 42, int decay = 240)
         {
             this.texture = texture;
             this.rectangle = rectangle;
@@ -35,7 +35,7 @@ namespace MemeGame
         public bool Update(PlayerCollection players, WallCollection walls)
         {
             rectangle.X += speed;
-            Rectangle hit = new Rectangle(rectangle.Center.X, rectangle.Y, speed, rectangle.Width);
+            Rectangle hit = new Rectangle(rectangle.Center.X, rectangle.Y, Math.Abs(speed), rectangle.Width);
             
             // test players
             

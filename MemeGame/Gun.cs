@@ -20,7 +20,7 @@ namespace MemeGame
         private int shotRate;
         private int lastShot;
 
-        public Gun(Rectangle rectangle, Texture2D gun_texture, Texture2D shot_texture, int damage, int shotSpeed = 10, int shotRate = 10)
+        public Gun(Rectangle rectangle, Texture2D gun_texture, Texture2D shot_texture, int damage, int shotSpeed = 42, int shotRate = 10)
         {
             this.texture = gun_texture;
             this.rectangle = rectangle;
@@ -38,7 +38,7 @@ namespace MemeGame
         {
             if (lastShot <= 0)
             {
-                shot.Add(new Shot(shotTexture, new Rectangle(shotLocation, new Point(10, 10)), Damage,loadShotSpeed));
+                shot.Add(new Shot(shotTexture, new Rectangle(shotLocation, new Point(32, 8)), Damage,loadShotSpeed));
                 lastShot = shotRate;
             }
             
