@@ -57,14 +57,14 @@ namespace MemeGame
             {
                 rectangle.X = owner.HitBox.Right;
                 rectangle.Y = owner.HitBox.Center.Y;
-                shotLocation = new Point(rectangle.Right, rectangle.Y);
+                shotLocation = new Point(owner.HitBox.Right, rectangle.Y);
                 loadShotSpeed = shotSpeed;
             }
             else
             {
                 rectangle.X = owner.HitBox.Left - rectangle.Width;
                 rectangle.Y = owner.HitBox.Center.Y;
-                shotLocation = new Point(rectangle.Left, rectangle.Y);
+                shotLocation = new Point(owner.HitBox.Left, rectangle.Y);
                 loadShotSpeed = -shotSpeed;
             }
 
