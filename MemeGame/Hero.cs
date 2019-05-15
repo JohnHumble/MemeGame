@@ -16,6 +16,7 @@ namespace MemeGame
         const int MAX_SPEED = 8; // the maximum velocity on the ground.
         const int DAMPEN = 2; // amount to slow down on ground.
         const int CLIP_DIVISOR = 4; // inversly proportional to the amout of clipping
+        const int KILL_LEVEL = 2000; // y value that kills the hero
 
         // location and physics based
         public Rectangle HitBox { get; private set; }
@@ -66,6 +67,10 @@ namespace MemeGame
 
         public bool Update(int gravity, WallCollection walls, PlayerCollection players)
         {
+            if (HitBox.Y > KILL_LEVEL)
+            {
+                return false;
+            }
             AccelY = gravity;
 
             // Save Velocity and Rec values to be manipulated
@@ -213,7 +218,7 @@ namespace MemeGame
             // reset Velocity and Rec values
             Velocity = velocity;
             HitBox = rectangle;
-
+            
             return Health > 0;
         }
 
