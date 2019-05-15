@@ -36,7 +36,9 @@ namespace MemeGame
 
         protected void DrawWeapon(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, rectangle, Color.White);
+            Rectangle blah = new Rectangle(0,0,120,60);
+           
+            spriteBatch.Draw(texture, rectangle, blah, Color.White);
         }
 
         public Point GetPoint()

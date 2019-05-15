@@ -97,7 +97,8 @@ namespace MemeGame
             heroTextures.Add(chungTex);
             Texture2D dogeTex = Content.Load<Texture2D>("doge");
             heroTextures.Add(dogeTex);
-            
+            Texture2D blockTex = Content.Load<Texture2D>("blocks");
+            Texture2D weaponsTex = Content.Load<Texture2D>("weapons");
             players = new PlayerCollection(heroTextures, UNIT_SIZE / 3 * 2, UNIT_SIZE);
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
@@ -115,7 +116,7 @@ namespace MemeGame
 
             weapons = new WeaponCollection();
 
-            Gun gun = new Gun(new Rectangle(0, 0, UNIT_SIZE, UNIT_SIZE / 4), fill, fill, 2);
+            Gun gun = new Gun(new Rectangle(0, 0, UNIT_SIZE, UNIT_SIZE / 2), weaponsTex, fill, 2);
             weapons.Add(gun);
             // TODO: use this.Content to load your game content here
         }
