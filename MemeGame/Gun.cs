@@ -14,13 +14,17 @@ namespace MemeGame
         Texture2D shotTexture;
 
         Point shotLocation;
+        Random random;
 
+        // look at ray tracing instead of projectile 
         private int shotSpeed;
         private int loadShotSpeed;
         private int shotRate;
         private int lastShot;
+        private int shotSize;
+        private int spread;
 
-        public Gun(Rectangle rectangle, Texture2D gun_texture, Texture2D shot_texture, int damage, int shotSpeed = 42, int shotRate = 10)
+        public Gun(Rectangle rectangle, Texture2D gun_texture, Texture2D shot_texture, int damage, int shotSpeed = 64, int shotRate = 10, int spread = 3)
         {
             this.texture = gun_texture;
             this.rectangle = rectangle;
@@ -32,13 +36,19 @@ namespace MemeGame
             this.shotSpeed = shotSpeed;
             this.shotRate = shotRate;
             lastShot = 0;
+            shotSize = shotSpeed;
+            this.spread = spread;
+
+            random = new Random();
         }
 
-        public override void Fire()
+        public override void Fire(Hero owner)
         {
             if (lastShot <= 0)
             {
-                shot.Add(new Shot(shotTexture, new Rectangle(shotLocation, new Point(32, 8)), Damage,loadShotSpeed));
+               // shot.Add(new Shot(shotTexture, new Rectangle(shotLocation, new Point(shotSize, 8)), Damage,loadShotSpeed));
+                int y = random.Next(-spread, spread + 1);
+                shot.Add(new Shot(shotTexture,shotLocation,new Point(loadShotSpeed,y),owner,8,Damage));
                 lastShot = shotRate;
             }
             
@@ -55,16 +65,16 @@ namespace MemeGame
             // set the gun rectangle and start point
             if (owner.IsRight)
             {
-                rectangle.X = owner.HitBox.Right;
-                rectangle.Y = owner.HitBox.Center.Y;
-                shotLocation = new Point(owner.HitBox.Right, rectangle.Y);
+                rectangle.X = owner.HitBox.Right - rectangle.Width/2;
+                rectangle.Y = owner.HitBox.Y + rectangle.Height/2;
+                shotLocation = new Point(owner.HitBox.Center.X, rectangle.Center.Y);
                 loadShotSpeed = shotSpeed;
             }
             else
             {
                 rectangle.X = owner.HitBox.Left - rectangle.Width;
-                rectangle.Y = owner.HitBox.Center.Y;
-                shotLocation = new Point(owner.HitBox.Left, rectangle.Y);
+                rectangle.Y = owner.HitBox.Y + rectangle.Height / 2;
+                shotLocation = new Point(owner.HitBox.Center.X - shotSpeed, rectangle.Center.Y);
                 loadShotSpeed = -shotSpeed;
             }
 

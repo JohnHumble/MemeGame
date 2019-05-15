@@ -38,16 +38,37 @@ namespace MemeGame
             }
         }
 
+        public bool TestHit(Rectangle other,int damage, Hero ignore)
+        {
+            foreach (var player in this)
+            {
+                if (player.GetHero() == ignore)
+                {
+                    continue;
+                }
+                if (player.GetHero().TestHit(other, damage))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public Vector2 GetPlayerMid()
         {
             Vector2 mid = new Vector2(0, 0);
+            int count = 0;
             foreach (var player in this)
             {
-                mid += player.GetLocation();
+                if (player.Live)
+                {
+                    mid += player.GetLocation();
+                    count++;
+                }
             }
 
-            mid.X /= Count;
-            mid.Y /= Count;
+            mid.X /= count;
+            mid.Y /= count;
 
             return mid;
         }
@@ -58,12 +79,16 @@ namespace MemeGame
             float maxX = int.MinValue;
             float minY = int.MaxValue;
             float minX = int.MaxValue;
+
             foreach (var player in this)
             {
-                maxX = Math.Max(maxX, player.GetLocation().X);
-                maxY = Math.Max(maxY, player.GetLocation().Y);
-                minX = Math.Min(minX, player.GetLocation().X);
-                minY = Math.Min(minY, player.GetLocation().Y);
+                if (player.Live)
+                {
+                    maxX = Math.Max(maxX, player.GetLocation().X);
+                    maxY = Math.Max(maxY, player.GetLocation().Y);
+                    minX = Math.Min(minX, player.GetLocation().X);
+                    minY = Math.Min(minY, player.GetLocation().Y);
+                }
             }
             return new Vector2(Math.Abs(maxX - minX), Math.Abs(maxY - minY));
         }

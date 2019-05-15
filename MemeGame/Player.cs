@@ -14,6 +14,8 @@ namespace MemeGame
         Hero hero;
         readonly Keys left, right, jump, fire;
 
+        public bool Live { get; private set; }
+
         string name;
         Color color;
 
@@ -26,6 +28,7 @@ namespace MemeGame
             this.fire = shoot;
             this.name = name;
             this.color = color;
+            Live = true;
         }
 
         private void TestInput(int jump_force, int speed)
@@ -54,23 +57,31 @@ namespace MemeGame
 
         public void Update(int gravity, WallCollection walls,PlayerCollection players,WeaponCollection weapons, int jump_force, int speed)
         {
-            TestInput(jump_force,speed);
-
-            hero.Update(gravity, walls,players);
-
-            if (hero.weapon == null)
+            if (Live)
             {
-                foreach(var weapon in weapons)
+                TestInput(jump_force, speed);
+
+                if (hero.weapon == null)
                 {
-                    int dis = Tool.distance(hero.GetPoint(), weapon.GetPoint());
-                    if (dis < 100)
+                    foreach(var weapon in weapons)
                     {
-                        hero.pickup(weapon);
-                        weapons.Remove(weapon);
-                        break;
+                        int dis = Tool.distance(hero.GetPoint(), weapon.GetPoint());
+                        if (dis < 100)
+                        {
+                            hero.pickup(weapon);
+                            weapons.Remove(weapon);
+                            break;
+                        }
                     }
                 }
             }
+            else
+            {
+                hero.stop();
+                hero.drop(weapons);
+            }
+
+            Live = hero.Update(gravity, walls,players);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -81,6 +92,7 @@ namespace MemeGame
         public void DrawName(SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.DrawString(font, name, new Vector2(hero.HitBox.Center.X - (name.Length/2 * 15), hero.HitBox.Y - 56), color);
+            spriteBatch.DrawString(font, "Health" + hero.Health, new Vector2(hero.HitBox.X, hero.HitBox.Y - 23), Color.Red);
         }
 
         public Hero GetHero()

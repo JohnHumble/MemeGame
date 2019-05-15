@@ -64,7 +64,7 @@ namespace MemeGame
             weapon = null;
         }
 
-        public void Update(int gravity, WallCollection walls, PlayerCollection players)
+        public bool Update(int gravity, WallCollection walls, PlayerCollection players)
         {
             AccelY = gravity;
 
@@ -213,6 +213,8 @@ namespace MemeGame
             // reset Velocity and Rec values
             Velocity = velocity;
             HitBox = rectangle;
+
+            return Health > 0;
         }
 
         public void pickup(Weapon weapon)
@@ -222,15 +224,18 @@ namespace MemeGame
 
         public void drop(WeaponCollection weapons)
         {
-            weapons.Add(weapon);
-            weapon = null;
+            if (weapon != null)
+            {
+                weapons.Add(weapon);
+                weapon = null;
+            }
         }
 
         public void fire()
         {
             if (weapon != null)
             {
-                weapon.Fire();
+                weapon.Fire(this);
             }
         }
 
@@ -339,6 +344,17 @@ namespace MemeGame
         public Point GetPoint()
         {
             return new Point(HitBox.X, HitBox.Y);
+        }
+
+        public bool TestHit(Rectangle other, int damage)
+        {
+            if (other.Intersects(HitBox))
+            {
+                Health -= damage;
+                return true;
+            }
+
+            return false;
         }
     }
 }
