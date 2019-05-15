@@ -46,6 +46,12 @@ namespace MemeGame
             {
                 return true;
             }
+
+            if (decay < 0)
+            {
+                return true;
+            }
+
             return false;
         }
 

@@ -18,6 +18,7 @@ namespace MemeGame
         private int shotSpeed;
         private int loadShotSpeed;
         private int shotRate;
+        private int lastShot;
 
         public Gun(Rectangle rectangle, Texture2D gun_texture, Texture2D shot_texture, int damage, int shotSpeed = 10, int shotRate = 10)
         {
@@ -30,11 +31,16 @@ namespace MemeGame
 
             this.shotSpeed = shotSpeed;
             this.shotRate = shotRate;
+            lastShot = 0;
         }
 
         public override void Fire()
         {
-            shot.Add(new Shot(shotTexture, new Rectangle(shotLocation, new Point(10, 10)), Damage,loadShotSpeed));
+            if (lastShot <= 0)
+            {
+                shot.Add(new Shot(shotTexture, new Rectangle(shotLocation, new Point(10, 10)), Damage,loadShotSpeed));
+                lastShot = shotRate;
+            }
             
        //     throw new NotImplementedException();
         }
@@ -62,9 +68,19 @@ namespace MemeGame
                 loadShotSpeed = -shotSpeed;
             }
 
-            foreach(var bull in shot)
+            for (int i = 0; i < shot.Count; i++)
             {
-                bull.Update(players, walls);
+                if(shot[i].Update(players, walls))
+                {
+                    shot.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            // update shot varialbes
+            if (lastShot > 0)
+            {
+                lastShot--;
             }
 
           //  throw new NotImplementedException();
