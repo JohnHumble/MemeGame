@@ -33,6 +33,7 @@ namespace MemeGame
         Screen screen;
 
         Builder builder;
+        Menus mainMenu;
 
         WallCollection walls;
         PlayerCollection players;
@@ -66,7 +67,7 @@ namespace MemeGame
             IsMouseVisible = true;
             graphics.ApplyChanges();
 
-            screen = Screen.Build;
+            screen = Screen.Menu;
             camera = new Camera(0,0,1f,screenWidth,screenHeight);
 
             // TODO: Add your initialization logic here
@@ -118,6 +119,8 @@ namespace MemeGame
 
             Gun gun = new Gun(new Rectangle(0, 0, UNIT_SIZE, UNIT_SIZE / 2), weaponsTex, fill, 2);
             weapons.Add(gun);
+
+            mainMenu = new Menus(sans, fill);
             // TODO: use this.Content to load your game content here
         }
 
@@ -147,6 +150,11 @@ namespace MemeGame
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (screen == Screen.Menu)
+            {
+                screen = mainMenu.Update(Mouse.GetState());
+            }
 
             if (screen == Screen.Play)
             {
@@ -190,7 +198,13 @@ namespace MemeGame
 
             // Camera test
             spriteBatch.Begin();
-          //  spriteBatch.DrawString(sans, "" + camera.scale, new Vector2(100, 100), Color.Yellow);
+            //  spriteBatch.DrawString(sans, "" + camera.scale, new Vector2(100, 100), Color.Yellow);
+
+            if (screen == Screen.Menu)
+            {
+                mainMenu.Draw(spriteBatch);
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
