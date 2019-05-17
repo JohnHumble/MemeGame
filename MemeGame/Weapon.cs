@@ -59,6 +59,7 @@ namespace MemeGame
         /// <param name="spriteBatch"></param>
         protected void DrawWeapon(SpriteBatch spriteBatch)
         {
+
             spriteBatch.Draw(texture, rectangle, source, Color.White);
         }
 
