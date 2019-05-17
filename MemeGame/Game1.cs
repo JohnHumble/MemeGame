@@ -100,13 +100,13 @@ namespace MemeGame
             heroTextures.Add(dogeTex);
             Texture2D blockTex = Content.Load<Texture2D>("blocks");
             Texture2D weaponsTex = Content.Load<Texture2D>("weapons");
-            players = new PlayerCollection(heroTextures, UNIT_SIZE / 3 * 2, UNIT_SIZE);
+            players = new PlayerCollection(heroTextures, UNIT_SIZE / 3 * 2, UNIT_SIZE,sans,fill);
 
             Texture2D wallTexture = loadColorTexture(Color.DarkGreen);
             walls = new WallCollection(wallTexture, TILE_SIZE);
             //walls.createBlock(0, 200, screenWidth, screenHeight);
 
-            builder = new Builder(walls);
+            builder = new Builder(walls,sans,fill);
 
             builder.loadMap("last");
 
@@ -158,7 +158,7 @@ namespace MemeGame
 
             if (screen == Screen.Play)
             {
-                players.Update(GRAV, walls, players, weapons);
+                screen = players.Update(GRAV, walls, players, weapons,Mouse.GetState());
                 camera.trackTo(players.GetPlayerMid(), players.GetDifference(),walls.GetMid(), walls.GetDifference());
 
                 if (Keyboard.GetState().IsKeyDown(Keys.RightShift))
@@ -171,10 +171,10 @@ namespace MemeGame
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
                     builder.saveMap("last");
-                    screen = Screen.Play;
+                    screen = Screen.Menu;
                 }
 
-                builder.building(Mouse.GetState(),camera);
+                screen = builder.building(Mouse.GetState(),camera,"last");
             }
             // TODO: Add your update logic here
 
@@ -203,6 +203,14 @@ namespace MemeGame
             if (screen == Screen.Menu)
             {
                 mainMenu.Draw(spriteBatch);
+            }
+            if (screen == Screen.Play)
+            {
+                players.Drawhud(spriteBatch);
+            }
+            if (screen == Screen.Build)
+            {
+                builder.Drawhud(spriteBatch);
             }
 
             spriteBatch.End();

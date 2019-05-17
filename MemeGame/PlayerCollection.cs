@@ -14,13 +14,17 @@ namespace MemeGame
         readonly List<Texture2D> textures;
         readonly int speed, jump, width, height;
 
-        public PlayerCollection(List<Texture2D> textures,int player_width,int player_height,int speed = 5, int jump = 28)
+        Button menu;
+
+        public PlayerCollection(List<Texture2D> textures,int player_width,int player_height,SpriteFont buttonFont,Texture2D buttonTexture,int speed = 5, int jump = 28)
         {
             this.textures = textures;
             this.speed = speed;
             this.jump = jump;
             width = player_width;
             height = player_height;
+
+            menu = new Button(500, 500, 100, 40,"Menu", buttonFont, buttonTexture);
         }
 
         public void AddPlayer(Point start_location, Heros type, string name, Color color, Keys left, Keys right, Keys jump, Keys fire)
@@ -30,12 +34,19 @@ namespace MemeGame
 
         }
 
-        public void Update(int gravity, WallCollection walls, PlayerCollection players, WeaponCollection weapons)
+        public Screen Update(int gravity, WallCollection walls, PlayerCollection players, WeaponCollection weapons, MouseState mouse)
         {
+            if (menu.IsPressed(mouse))
+            {
+                return Screen.Menu;
+            }
+
             foreach (var player in this)
             {
                 player.Update(gravity, walls, players, weapons, jump, speed);
             }
+
+            return Screen.Play;
         }
 
         public bool TestHit(Rectangle other,int damage, Hero ignore)
@@ -107,6 +118,11 @@ namespace MemeGame
             {
                 player.DrawName(spriteBatch, font);
             }
+        }
+
+        public void Drawhud(SpriteBatch spriteBatch)
+        {
+            menu.Draw(spriteBatch);
         }
     }
 }

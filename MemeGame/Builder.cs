@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -19,15 +20,24 @@ namespace MemeGame
 
         private readonly int radius;
 
-        public Builder(WallCollection walls)
+        private List<Point> startLocation, gunLocations;
+
+        private Button menu;
+
+        public Builder(WallCollection walls, SpriteFont buttonFont, Texture2D buttonTexture)
         {
+            startLocation = new List<Point>();
+            gunLocations = new List<Point>();
+
             this.walls = walls;
             radius = 64;
+
+            menu = new Button(100, 100, 100, 40, "Menu", buttonFont, buttonTexture);
         }
 
         public void saveMap(string fileName)
         {
-            Map saveMap = new Map(walls);
+            Map saveMap = new Map(walls,startLocation,gunLocations);
             string appPath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             appPath +="\\"+ fileName;
             
@@ -59,8 +69,14 @@ namespace MemeGame
             }
         }
 
-        public void building(MouseState mouse, Camera camera)
+        public Screen building(MouseState mouse, Camera camera, string file)
         {
+            if (menu.IsPressed(mouse))
+            {
+                saveMap(file);
+                return Screen.Menu;
+            }
+
             Point mousePos = camera.transformMouse(mouse.X, mouse.Y);
             // create tiles with left click
             if (mouse.LeftButton == ButtonState.Pressed)
@@ -80,6 +96,13 @@ namespace MemeGame
                     }
                 }
             }
+            return Screen.Build;
+        }
+
+
+        public void Drawhud(SpriteBatch spriteBatch)
+        {
+            menu.Draw(spriteBatch);
         }
     }
 }
