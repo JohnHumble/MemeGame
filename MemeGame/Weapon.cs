@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace MemeGame
 {
+    /// <summary>
+    /// Abstract class for all weapons.
+    /// </summary>
     abstract class Weapon
     {
         public Rectangle rectangle;
@@ -30,17 +33,33 @@ namespace MemeGame
             texture = null;
             source = new Rectangle(0,0,120,60);
         }
-        
+        /// <summary>
+        /// This is the method that will be called when a player pushes the attack button
+        /// </summary>
+        /// <param name="owner">hero of the player</param>
         public abstract void Fire(Hero owner);
-        public abstract void Update(Hero owner, WallCollection walls, PlayerCollection players);
-        //public abstract void Update();
 
+        /// <summary>
+        /// This method is used to update anything needed with the weapon like location.
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="walls"></param>
+        /// <param name="players"></param>
+        public abstract void Update(Hero owner, WallCollection walls, PlayerCollection players);
+
+        /// <summary>
+        /// This method is used to draw the weapon and any other things needed.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public abstract void Draw(SpriteBatch spriteBatch);
 
+        /// <summary>
+        /// This method will simply draw the weapon but nothing else.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         protected void DrawWeapon(SpriteBatch spriteBatch)
         {
-            
-           
+
             spriteBatch.Draw(texture, rectangle, source, Color.White);
         }
 
