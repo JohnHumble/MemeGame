@@ -24,10 +24,22 @@ namespace MemeGame
 
         private Button menu;
 
-        public Builder(WallCollection walls, SpriteFont buttonFont, Texture2D buttonTexture)
+        private Texture2D playerTexture, gunTexture;
+
+        private int playerWidth, playerHeight, gunWidth, gunHeight;
+
+        public Builder(WallCollection walls, SpriteFont buttonFont, Texture2D buttonTexture, Texture2D playerTexture, int playerWidth, int playerHeight, Texture2D gunTexture, int gunWidth, int gunHeight)
         {
             startLocation = new List<Point>();
             gunLocations = new List<Point>();
+
+            this.playerHeight = playerHeight;
+            this.playerWidth = playerWidth;
+            this.gunHeight = gunHeight;
+            this.gunWidth = gunWidth;
+
+            this.playerTexture = playerTexture;
+            this.gunTexture = gunTexture;
 
             this.walls = walls;
             radius = 64;
@@ -48,8 +60,6 @@ namespace MemeGame
             stream.Close();
         }
 
-       
-
         public void loadMap(string fileName)
         {
             IFormatter formatter = new BinaryFormatter();
@@ -59,14 +69,26 @@ namespace MemeGame
 
             if (File.Exists(appPath))
             {
-
-            Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-            Map load = (Map)formatter.Deserialize(stream);
-
-
-            stream.Close();
-            walls.loadFromMap(load);
+                Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                Map load = (Map)formatter.Deserialize(stream);
+                
+                stream.Close();
+                walls.loadFromMap(load);
+                startLocation = loadPointDataList(load.startLocations);
+                gunLocations = loadPointDataList(load.gunLocations);
             }
+        }
+
+        private List<Point> loadPointDataList(List<PointData> dataList)
+        {
+            List<Point> tmp = new List<Point>();
+            
+            foreach (var data in dataList)
+            {
+                tmp.Add(new Point(data.x, data.y));
+            }
+
+            return tmp;
         }
 
         public Screen building(MouseState mouse, Camera camera, string file)
@@ -99,6 +121,22 @@ namespace MemeGame
             return Screen.Build;
         }
 
+        public void DrawLocations(SpriteBatch spriteBatch)
+        {
+            foreach (var playerLoc in startLocation)
+            {
+                Rectangle render = new Rectangle(playerLoc.X,playerLoc.Y,playerWidth,playerHeight);
+                Rectangle source = new Rectangle(0,0,playerWidth,playerHeight);
+                spriteBatch.Draw(playerTexture, render, source, Color.White);
+            }
+
+            foreach (var gunLoc in gunLocations)
+            {
+                Rectangle render = new Rectangle(gunLoc.X, gunLoc.Y, gunWidth, gunHeight);
+                Rectangle source = new Rectangle(0, 0, gunWidth, gunHeight);
+                spriteBatch.Draw(gunTexture, render, source, Color.White);
+            }
+        }
 
         public void Drawhud(SpriteBatch spriteBatch)
         {

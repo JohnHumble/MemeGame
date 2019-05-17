@@ -106,9 +106,9 @@ namespace MemeGame
             walls = new WallCollection(wallTexture, TILE_SIZE);
             //walls.createBlock(0, 200, screenWidth, screenHeight);
 
-            builder = new Builder(walls,sans,fill);
+            builder = new Builder(walls,sans,fill,heroTex,UNIT_SIZE/3*2,UNIT_SIZE,weaponsTex,UNIT_SIZE,UNIT_SIZE/2);
 
-            builder.loadMap("last");
+            builder.loadMap("last.gmd");
 
             // delete this sometime
             players.AddPlayer(new Point(100, 100), Heros.Chungus,"player 1",Color.Red, Keys.Left, Keys.Right, Keys.Up,Keys.Space);
@@ -170,7 +170,7 @@ namespace MemeGame
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
-                    builder.saveMap("last");
+                    builder.saveMap("last.gmd");
                     screen = Screen.Menu;
                 }
 

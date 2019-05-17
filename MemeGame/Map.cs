@@ -25,11 +25,18 @@ namespace MemeGame
             }
 
             // save start locations
-
+            this.startLocations = new List<PointData>();
+            foreach (var loc in startLocations)
+            {
+                this.startLocations.Add(new PointData(loc.X, loc.Y));
+            }
 
             // save gun locations
-
-        
+            this.gunLocations = new List<PointData>();
+            foreach (var loc in gunLocations)
+            {
+                this.gunLocations.Add(new PointData(loc.X, loc.Y));
+            }
         }
     }
 }
