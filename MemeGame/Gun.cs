@@ -69,6 +69,8 @@ namespace MemeGame
                 rectangle.Y = owner.HitBox.Y + rectangle.Height/2;
                 shotLocation = new Point(owner.HitBox.Center.X, rectangle.Center.Y);
                 loadShotSpeed = shotSpeed;
+
+                // TODO change source rectangle to point right
             }
             else
             {
@@ -76,6 +78,8 @@ namespace MemeGame
                 rectangle.Y = owner.HitBox.Y + rectangle.Height / 2;
                 shotLocation = new Point(owner.HitBox.Center.X - shotSpeed, rectangle.Center.Y);
                 loadShotSpeed = -shotSpeed;
+
+                // TODO change source rectangle to point left
             }
 
             for (int i = 0; i < shot.Count; i++)
