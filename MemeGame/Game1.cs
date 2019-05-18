@@ -174,7 +174,7 @@ namespace MemeGame
                     screen = Screen.Menu;
                 }
 
-                screen = builder.Update(Mouse.GetState(),camera,"last");
+                screen = builder.Update(Mouse.GetState(),camera,"last.gmd");
             }
             // TODO: Add your update logic here
 

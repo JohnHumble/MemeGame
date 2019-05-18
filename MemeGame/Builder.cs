@@ -28,7 +28,7 @@ namespace MemeGame
         private readonly int radius;
 
         private List<Point> startLocation, gunLocations;
-        private Button menu;
+        private Button menu, panButton, buildButton;
 
         private Texture2D playerTexture, gunTexture;
         private int playerWidth, playerHeight, gunWidth, gunHeight;
@@ -53,10 +53,13 @@ namespace MemeGame
             this.walls = walls;
             radius = 64;
 
-            menu = new Button(100, 100, 100, 40, "Menu", buttonFont, buttonTexture);
-
             state = BuildState.Pan;
             last_pressed = new Point(0, 0);
+
+            // Create buttons
+            menu = new Button(100, 100, 100, 40, "Menu", buttonFont, buttonTexture);
+            panButton = new Button(100,150,100,40, "Pan", buttonFont,buttonTexture);
+            buildButton = new Button(100, 200, 100, 40, "Build", buttonFont, buttonTexture);
         }
 
         public void saveMap(string fileName)
@@ -109,6 +112,15 @@ namespace MemeGame
             {
                 saveMap(file);
                 return Screen.Menu;
+            }
+            if (buildButton.IsPressed(mouse))
+            {
+                state = BuildState.Blocks;
+            }
+            if (panButton.IsPressed(mouse))
+            {
+                state = BuildState.Pan;
+                saveMap(file);
             }
 
             if (state == BuildState.Blocks)
@@ -184,6 +196,8 @@ namespace MemeGame
         public void Drawhud(SpriteBatch spriteBatch)
         {
             menu.Draw(spriteBatch);
+            buildButton.Draw(spriteBatch);
+            panButton.Draw(spriteBatch);
         }
     }
 }
