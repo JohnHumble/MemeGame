@@ -14,19 +14,28 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace MemeGame
 {
+    enum BuildState
+    {
+        Blocks,
+        StartLocations,
+        Guns,
+        Pan
+    }
+
     class Builder
     {
         private WallCollection walls;
-
         private readonly int radius;
 
         private List<Point> startLocation, gunLocations;
-
         private Button menu;
 
         private Texture2D playerTexture, gunTexture;
-
         private int playerWidth, playerHeight, gunWidth, gunHeight;
+
+        private BuildState state;
+        private Point last_pressed;
+        private Vector2 last_camera;
 
         public Builder(WallCollection walls, SpriteFont buttonFont, Texture2D buttonTexture, Texture2D playerTexture, int playerWidth, int playerHeight, Texture2D gunTexture, int gunWidth, int gunHeight)
         {
@@ -45,6 +54,9 @@ namespace MemeGame
             radius = 64;
 
             menu = new Button(100, 100, 100, 40, "Menu", buttonFont, buttonTexture);
+
+            state = BuildState.Pan;
+            last_pressed = new Point(0, 0);
         }
 
         public void saveMap(string fileName)
@@ -91,7 +103,7 @@ namespace MemeGame
             return tmp;
         }
 
-        public Screen building(MouseState mouse, Camera camera, string file)
+        public Screen Update(MouseState mouse, Camera camera, string file)
         {
             if (menu.IsPressed(mouse))
             {
@@ -99,6 +111,38 @@ namespace MemeGame
                 return Screen.Menu;
             }
 
+            if (state == BuildState.Blocks)
+            {
+                building(mouse, camera);
+            }
+
+            if (state == BuildState.Pan)
+            {
+                paning(mouse, camera);
+            }
+
+            return Screen.Build;
+        }
+
+        public void paning(MouseState mouse, Camera camera)
+        {
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
+                Point distance = new Point(last_pressed.X - mouse.X, last_pressed.Y - mouse.Y);
+                Vector2 loc = last_camera;
+                loc.X -= distance.X;
+                loc.Y -= distance.Y;
+                camera.location = loc;
+            }
+            else
+            {
+                last_pressed = new Point(mouse.X, mouse.Y);
+                last_camera = camera.location;
+            }
+        }
+
+        public void building(MouseState mouse, Camera camera)
+        {
             Point mousePos = camera.transformMouse(mouse.X, mouse.Y);
             // create tiles with left click
             if (mouse.LeftButton == ButtonState.Pressed)
@@ -118,7 +162,6 @@ namespace MemeGame
                     }
                 }
             }
-            return Screen.Build;
         }
 
         public void DrawLocations(SpriteBatch spriteBatch)
